@@ -1,241 +1,222 @@
 import React, { useState } from 'react';
-import { Shield, Key, Cpu, Terminal, Globe, Activity, LayoutDashboard, Wallet, ArrowUpRight, ArrowDownLeft, LogOut, RefreshCw, Layers } from 'lucide-react';
+import { Shield, Cpu, Terminal, Globe, Activity, PlusCircle, TrendingUp, Download, MapPin } from 'lucide-react';
 
 function App() {
-  const [operator, setOperator] = useState('');
-  const [email, setEmail] = useState('');
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  // Form States
+  const [namaPerusahaan, setNamaPerusahaan] = useState('');
+  const [emailResmi, setEmailResmi] = useState('');
+  const [kategori, setKategori] = useState('Cafe / Eatery');
+  const [tier, setTier] = useState('Standard Tier (Free)');
 
-  const handleInitialize = (e: React.FormEvent) => {
+  // Hardcoded initial data from your screenshot
+  const [logs, setLogs] = useState([
+    { time: '22:20:47', label: 'sesa', coord: '[-8.653537429181974, 115.21422685277764] - Cafe / Eatery Node Cluster', integrity: '96.3%' },
+    { time: '12:04:15', label: 'Sesa Quantum Lab', coord: '[-8.6705, 115.2126] - Denpasar, Bali', integrity: '98.2%' },
+    { time: '12:05:32', label: 'Wamena Music Base', coord: '[-8.6823, 115.2625] - Sanur, Bali', integrity: '92.4%' }
+  ]);
+
+  const handleDeployNode = (e: React.FormEvent) => {
     e.preventDefault();
-    if (operator && email) {
-      setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-        setIsLoggedIn(true);
-      }, 2000);
-    } else {
-      alert('Please fill in all security credentials!');
-    }
-  };
+    if (!namaPerusahaan || !emailResmi) return alert('Mohon isi semua data node!');
+    
+    const newLog = {
+      time: new Date().toLocaleTimeString(),
+      label: namaPerusahaan,
+      coord: `[-8.6740, 115.2140] - ${kategori} Node Cluster`,
+      integrity: '99.1%'
+    };
 
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setOperator('');
-    setEmail('');
+    setLogs([newLog, ...logs]);
+    setNamaPerusahaan('');
+    setEmailResmi('');
+    alert('🎯 Node Sukses Di-deploy ke Koordinat Global!');
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col justify-between font-mono relative overflow-hidden selection:bg-cyan-500 selection:text-slate-900">
+    <div className="min-h-screen bg-[#1c2331] text-slate-300 font-mono p-4 flex flex-col justify-between relative text-[12px]">
       
-      {/* BACKGROUND GRID EFFECT */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#0f172a_1px,transparent_1px),linear-gradient(to_bottom,#0f172a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
-
-      {/* TOPBAR NAVIGATION */}
-      <header className="border-b border-cyan-500/20 bg-slate-900/60 backdrop-blur-md z-10 px-6 py-4 flex justify-between items-center">
+      {/* HEADER SECTION */}
+      <header className="bg-[#2a3243]/80 border border-slate-700/50 rounded-lg p-3 flex justify-between items-center mb-3 backdrop-blur-md">
         <div className="flex items-center gap-3">
-          <Cpu className="w-6 h-6 text-cyan-400 animate-pulse" />
-          <span className="font-bold tracking-widest bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">SESA CORE ENGINE v7.0</span>
+          <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+          <h1 className="font-bold tracking-widest text-slate-100 uppercase text-sm">SESA CORE ENGINE V7.0 LIVE</h1>
         </div>
-        <div className="flex items-center gap-4 text-xs">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-            <span className="text-emerald-400 font-bold">NODE GLOBAL ACTIVE</span>
-          </div>
-          {isLoggedIn && (
-            <button 
-              onClick={handleLogout}
-              className="flex items-center gap-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/20 px-3 py-1.5 rounded-lg transition-colors font-bold text-[11px]"
-            >
-              <LogOut className="w-3.5 h-3.5" /> LOCK CORE
-            </button>
-          )}
+        <div className="flex items-center gap-4 text-[11px] font-bold">
+          <span className="text-emerald-400 bg-emerald-950/40 border border-emerald-800 px-2 py-0.5 rounded text-[10px]">SYS: OPERATIONAL</span>
+          <span className="text-slate-400 bg-slate-950 px-2 py-0.5 border border-slate-800 rounded flex items-center gap-1">
+            <MapPin className="w-3 h-3 text-rose-500" /> LOCATION: BALI
+          </span>
         </div>
       </header>
 
-      {/* INTERFACE MANAGER (LOGIN VS DASHBOARD) */}
-      <main className="flex-grow flex items-center justify-center p-6 z-10 w-full max-w-7xl mx-auto">
+      {/* MIDDLE LAYOUT: FORMS, MAP, AND SIDEBAR PANELS */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-grow mb-3">
         
-        {!isLoggedIn ? (
-          /* ================= LOGIN INTERFACE ================= */
-          <div className="w-full max-w-md bg-slate-900/80 border border-cyan-500/30 rounded-xl p-8 shadow-[0_0_50px_-12px_rgba(6,182,212,0.15)] backdrop-blur-xl relative">
-            <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-cyan-400 rounded-tl-md"></div>
-            <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-cyan-400 rounded-tr-md"></div>
-            <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-cyan-400 rounded-bl-md"></div>
-            <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-cyan-400 rounded-br-md"></div>
+        {/* LEFT PANEL: REGISTER BUSINESS NODE */}
+        <div className="lg:col-span-3 bg-[#2a3243]/70 border border-slate-700/50 rounded-lg p-4 flex flex-col justify-between backdrop-blur-md">
+          <div className="flex justify-between text-[11px] font-bold text-slate-400 mb-4">
+            <span className="text-emerald-400">SCORE:<br/>99.4%</span>
+            <span className="text-right">EDIT/TSC:<br/>X-7</span>
+          </div>
 
-            <div className="text-center mb-8">
-              <div className="inline-flex p-3 bg-cyan-500/10 rounded-full text-cyan-400 border border-cyan-500/20 mb-3 shadow-[0_0_15px_rgba(6,182,212,0.1)]">
-                <Shield className="w-8 h-8" />
-              </div>
-              <h1 className="text-xl font-black tracking-widest text-cyan-400">ORACLE AUTH GATEWAY</h1>
-              <p className="text-xs text-slate-400 mt-1 uppercase tracking-wider">Sesa Global Network Access Control</p>
+          <h2 className="font-bold text-cyan-400 mb-3 flex items-center gap-1.5 tracking-wider uppercase text-[11px]">
+            <PlusCircle className="w-4 h-4" /> REGISTER NEW BUSINESS NODE
+          </h2>
+
+          <form onSubmit={handleDeployNode} className="space-y-4 flex-grow flex flex-col justify-start">
+            <div>
+              <label className="block text-[10px] uppercase text-slate-400 mb-1 font-bold">Nama Perusahaan</label>
+              <input 
+                type="text"
+                value={namaPerusahaan}
+                onChange={(e) => setNamaPerusahaan(e.target.value)}
+                placeholder="e.g. Sesa Cyber Tech" 
+                className="w-full bg-[#1c2331] border border-slate-700 rounded p-2 text-cyan-300 focus:outline-none focus:border-cyan-500"
+              />
             </div>
 
-            <form onSubmit={handleInitialize} className="space-y-5">
-              <div>
-                <label className="block text-xs uppercase tracking-widest text-slate-400 mb-2 font-bold flex items-center gap-2">
-                  <Terminal className="w-3.5 h-3.5 text-cyan-400" /> Operator Identity
-                </label>
-                <input 
-                  type="text" 
-                  value={operator}
-                  onChange={(e) => setOperator(e.target.value)}
-                  placeholder="ENTER YOUR NAME" 
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-cyan-400 text-cyan-300 placeholder:text-slate-700 transition-colors uppercase tracking-wider font-bold"
-                  disabled={isLoading}
-                />
-              </div>
+            <div>
+              <label className="block text-[10px] uppercase text-slate-400 mb-1 font-bold">Email Resmi</label>
+              <input 
+                type="email"
+                value={emailResmi}
+                onChange={(e) => setEmailResmi(e.target.value)}
+                placeholder="admin@sesa-cluster.com" 
+                className="w-full bg-[#1c2331] border border-slate-700 rounded p-2 text-cyan-300 focus:outline-none focus:border-cyan-500"
+              />
+            </div>
 
-              <div>
-                <label className="block text-xs uppercase tracking-widest text-slate-400 mb-2 font-bold flex items-center gap-2">
-                  <Key className="w-3.5 h-3.5 text-cyan-400" /> Secure Email Address
-                </label>
-                <input 
-                  type="email" 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="operator@quantum-oracle.com" 
-                  className="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-cyan-400 text-cyan-300 placeholder:text-slate-700 transition-colors font-bold"
-                  disabled={isLoading}
-                />
-              </div>
-
-              <button 
-                type="submit"
-                disabled={isLoading}
-                className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-slate-950 font-black text-xs uppercase tracking-widest py-4 rounded-lg shadow-[0_4px_20px_rgba(6,182,212,0.25)] transition-all active:scale-[0.98] duration-150 border border-cyan-300/20 disabled:opacity-50"
+            <div>
+              <label className="block text-[10px] uppercase text-slate-400 mb-1 font-bold">Kategori Bisnis</label>
+              <select 
+                value={kategori}
+                onChange={(e) => setKategori(e.target.value)}
+                className="w-full bg-[#1c2331] border border-slate-700 rounded p-2 text-slate-200 focus:outline-none"
               >
-                {isLoading ? 'CONNECTING TO NODE...' : 'Initialize Core Access'}
-              </button>
-            </form>
+                <option>Cafe / Eatery</option>
+                <option>Tech Startup</option>
+                <option>Music Studio</option>
+              </select>
+            </div>
 
-            <div className="mt-6 pt-5 border-t border-slate-800 flex items-center justify-between text-[10px] tracking-wider text-slate-500 font-bold">
-              <span className="flex items-center gap-1.5"><Activity className="w-3 h-3 text-cyan-500 animate-pulse" /> SYSTEM STATUS:</span>
-              <span className={`px-2 py-0.5 rounded ${isLoading ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-cyan-500/10 text-cyan-400 border border-cyan-500/20'}`}>
-                {isLoading ? 'DECRYPTING...' : 'STANDBY'}
-              </span>
+            <div>
+              <label className="block text-[10px] uppercase text-slate-400 mb-1 font-bold">SaaS Pricing Tier</label>
+              <select 
+                value={tier}
+                onChange={(e) => setTier(e.target.value)}
+                className="w-full bg-[#1c2331] border border-slate-700 rounded p-2 text-slate-200 focus:outline-none"
+              >
+                <option>Standard Tier (Free)</option>
+                <option>Premium Cluster Tier</option>
+              </select>
+            </div>
+
+            <button 
+              type="submit"
+              className="w-full bg-cyan-600 hover:bg-cyan-500 text-slate-950 font-black tracking-widest py-2.5 rounded transition-colors uppercase mt-auto text-[11px]"
+            >
+              DEPLOY NODE
+            </button>
+          </form>
+        </div>
+
+        {/* CENTER PANEL: THE MAP LAYOUT */}
+        <div className="lg:col-span-6 bg-[#2a3243]/40 border border-slate-700/50 rounded-lg overflow-hidden relative min-h-[350px]">
+          {/* Mock OpenStreetMap Vector Container */}
+          <iframe 
+            title="OpenStreetMap Denpasar Cluster"
+            src="https://www.openstreetmap.org/export/embed.html?bbox=115.1500%2C-8.7200%2C115.2800%2C-8.6200&amp;layer=mapnik&amp;marker=-8.6535%2C115.2142"
+            className="w-full h-full absolute inset-0 border-none opacity-80 filter invert-[90%] hue-rotate-[180deg] saturate-[150%]"
+          ></iframe>
+          
+          {/* Center Coordinates HUD Overlay */}
+          <div className="absolute top-3 left-3 bg-[#1c2331]/90 border border-slate-700 text-cyan-400 px-3 py-1.5 rounded font-bold text-[10px] pointer-events-none shadow-md">
+            📡 GPS CLUSTER LINK: ACTIVE
+          </div>
+        </div>
+
+        {/* RIGHT PANEL: FINANCIAL & PREDICTOR TERMINALS */}
+        <div className="lg:col-span-3 flex flex-col gap-3">
+          
+          {/* BINANCE HUB TERMINAL */}
+          <div className="bg-[#2a3243]/70 border border-slate-700/50 rounded-lg p-4 backdrop-blur-md">
+            <h3 className="text-[11px] font-bold text-amber-500 mb-3 flex items-center gap-1 tracking-wider uppercase">
+              ● BINANCE HUB TERMINAL
+            </h3>
+            <div className="flex justify-between items-baseline">
+              <span className="text-slate-400 font-bold">SOL / USDT</span>
+              <span className="text-xl font-black text-amber-400">$141.76</span>
+            </div>
+            <div className="w-full bg-slate-950 h-1 rounded mt-3 overflow-hidden">
+              <div className="bg-amber-500 h-full w-[70%]"></div>
             </div>
           </div>
-        ) : (
-          /* ================= MAIN DASHBOARD INTERFACE ================= */
-          <div className="w-full space-y-6 animate-[fadeIn_0.3s_ease-out]">
-            
-            {/* WELCOME BANNER */}
-            <div className="bg-slate-900/40 border border-cyan-500/20 rounded-xl p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 backdrop-blur-md">
+
+          {/* ORACLE PREDICTOR */}
+          <div className="bg-[#2a3243]/70 border border-slate-700/50 rounded-lg p-4 flex-grow backdrop-blur-md flex flex-col justify-between">
+            <div>
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="text-[11px] font-bold text-cyan-400 tracking-wider uppercase">● ORACLE PREDICTOR</h3>
+                <span className="text-[9px] bg-cyan-950 text-cyan-400 border border-cyan-800 px-1 rounded font-bold">ACTIVE</span>
+              </div>
+              <div className="bg-[#1c2331] border border-slate-800 rounded p-3 font-mono text-[11px] space-y-1.5">
+                <p className="text-slate-500">// AI CORE STREAM STATUS</p>
+                <p className="text-emerald-400 font-bold">Target: sesa</p>
+                <p className="text-slate-400 leading-relaxed text-[10px]">Successfully scanned region coordinates cluster. Parsing metadata...</p>
+              </div>
+            </div>
+
+            <div className="mt-4 pt-3 border-t border-slate-700/40 grid grid-cols-2 gap-2 text-[10px] font-bold">
               <div>
-                <h2 className="text-lg font-black text-cyan-400 uppercase tracking-wider flex items-center gap-2">
-                  <LayoutDashboard className="w-5 h-5 text-cyan-400" /> Welcome back, Commander {operator}!
-                </h2>
-                <p className="text-xs text-slate-400 mt-1">Authorized Node Session active for secure mail link: <span className="text-cyan-500 font-bold">{email}</span></p>
+                <span className="text-slate-500 block">ANALYZED SENTIMENT</span>
+                <span className="text-emerald-400 uppercase">POSITIVE</span>
               </div>
-              <div className="bg-slate-950 px-4 py-2 border border-slate-800 rounded-lg text-[11px] font-bold text-slate-400 flex items-center gap-2">
-                <Layers className="w-3.5 h-3.5 text-blue-400" /> QUANTUM CLUSTER ID: <span className="text-cyan-400">#AF045-X8C</span>
-              </div>
-            </div>
-
-            {/* FINANCIAL CRYPTO SPOT WALLET CARDS */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-5 backdrop-blur-md relative overflow-hidden group">
-                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-cyan-500 to-transparent"></div>
-                <div className="flex justify-between items-start">
-                  <span className="text-xs text-slate-400 font-bold tracking-wider uppercase">Solana Liquidity (SOL)</span>
-                  <Wallet className="w-4 h-4 text-cyan-400" />
-                </div>
-                <div className="mt-4 flex items-baseline gap-2">
-                  <span className="text-2xl font-black text-slate-100">1,438.50</span>
-                  <span className="text-xs font-bold text-cyan-400">SOL</span>
-                </div>
-                <div className="mt-2 text-[10px] text-emerald-400 font-bold flex items-center gap-1">
-                  <ArrowUpRight className="w-3 h-3" /> +12.4% (Spot Wallet)
-                </div>
-              </div>
-
-              <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-5 backdrop-blur-md relative overflow-hidden group">
-                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-blue-500 to-transparent"></div>
-                <div className="flex justify-between items-start">
-                  <span className="text-xs text-slate-400 font-bold tracking-wider uppercase">Stable Coin Asset</span>
-                  <Wallet className="w-4 h-4 text-blue-400" />
-                </div>
-                <div className="mt-4 flex items-baseline gap-2">
-                  <span className="text-2xl font-black text-slate-100">25,840.00</span>
-                  <span className="text-xs font-bold text-blue-400">USDT</span>
-                </div>
-                <div className="mt-2 text-[10px] text-slate-500 font-bold flex items-center gap-1">
-                  <RefreshCw className="w-3 h-3 animate-spin" /> P2P Escrow Sync Active
-                </div>
-              </div>
-
-              <div className="bg-slate-900/60 border border-cyan-500/20 rounded-xl p-5 backdrop-blur-md relative overflow-hidden group">
-                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-emerald-500 to-transparent"></div>
-                <div className="flex justify-between items-start">
-                  <span className="text-xs text-slate-400 font-bold tracking-wider uppercase">Net Oracle Profit</span>
-                  <Activity className="w-4 h-4 text-emerald-400" />
-                </div>
-                <div className="mt-4 flex items-baseline gap-2">
-                  <span className="text-2xl font-black text-emerald-400">$ 4,892.15</span>
-                </div>
-                <div className="mt-2 text-[10px] text-emerald-400 font-bold flex items-center gap-1">
-                  <ArrowUpRight className="w-3 h-3" /> Trading Bot AI Live Optimization
-                </div>
+              <div className="text-right">
+                <span className="text-slate-500 block">AI ACCURACY RATE</span>
+                <span className="text-cyan-400">99.12%</span>
               </div>
             </div>
-
-            {/* SECURE TERMINAL DATA LOG TABLE */}
-            <div className="bg-slate-900/50 border border-slate-800 rounded-xl p-6 backdrop-blur-md">
-              <h3 className="text-xs font-black uppercase tracking-widest text-cyan-400 mb-4 flex items-center gap-2">
-                <Terminal className="w-4 h-4" /> Live Node Execution Logs
-              </h3>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse text-xs">
-                  <thead>
-                    <tr className="border-b border-slate-800 text-slate-500 font-bold uppercase tracking-wider">
-                      <th className="pb-3 pl-2">Timestamp</th>
-                      <th className="pb-3">Action Order</th>
-                      <th className="pb-3">Target Address</th>
-                      <th className="pb-3 text-right pr-2">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-800/40 text-slate-300 font-bold">
-                    <tr className="hover:bg-slate-800/20 transition-colors">
-                      <td className="py-3 pl-2 text-slate-500">23:46:10</td>
-                      <td>DECRYPT QUANTUM BLOCK</td>
-                      <td className="font-mono text-cyan-500">sol_node_main_0x71a</td>
-                      <td className="py-3 text-right pr-2 text-emerald-400">SUCCESS</td>
-                    </tr>
-                    <tr className="hover:bg-slate-800/20 transition-colors">
-                      <td className="py-3 pl-2 text-slate-500">23:45:52</td>
-                      <td>EXECUTE AUTO LIMIT ORDER</td>
-                      <td className="font-mono text-cyan-500">binance_p2p_usdt_wallet</td>
-                      <td className="py-3 text-right pr-2 text-emerald-400">SUCCESS</td>
-                    </tr>
-                    <tr className="hover:bg-slate-800/20 transition-colors">
-                      <td className="py-3 pl-2 text-slate-500">23:42:01</td>
-                      <td>INITIALIZE SECURITY LAYER</td>
-                      <td className="font-mono text-cyan-500">oracle_auth_gateway_v7</td>
-                      <td className="py-3 text-right pr-2 text-cyan-400">BYPASSED</td>
-                    </tr>
-                    <tr className="hover:bg-slate-800/20 transition-colors">
-                      <td className="py-3 pl-2 text-slate-500">23:38:15</td>
-                      <td>BLOCK INTRUDER MALWARE</td>
-                      <td className="font-mono text-rose-400">unknown_ip_192.168.1.9</td>
-                      <td className="py-3 text-right pr-2 text-rose-400">TERMINATED</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
           </div>
-        )}
 
-      </main>
+        </div>
 
-      {/* FOOTER METADATA */}
-      <footer className="border-t border-slate-900 bg-slate-950/80 backdrop-blur-md z-10 px-6 py-4 flex justify-between items-center text-[10px] text-slate-600 font-bold tracking-widest">
-        <span className="flex items-center gap-1"><Globe className="w-3 h-3 text-slate-500" /> SECURE PROTOCOL PREMIUM TIER ACTIVE</span>
-        <span>© 2026 SESA GLOBAL TRADING CO.</span>
+      </div>
+
+      {/* BOTTOM LAYOUT: ENTERPRISE DATABASE LIVE LOG VIEWER */}
+      <footer className="bg-[#2a3243]/80 border border-slate-700/50 rounded-lg p-4 backdrop-blur-md z-10">
+        <div className="flex justify-between items-center mb-3">
+          <h3 className="text-[11px] font-bold text-cyan-400 tracking-wider uppercase flex items-center gap-1.5">
+            <Terminal className="w-4 h-4" /> ENTERPRISE DATABASE LIVE LOG VIEWER (SAAS GLOBAL)
+          </h3>
+          <button className="bg-[#1c2331] hover:bg-slate-800 text-[10px] font-bold border border-slate-700 px-3 py-1 rounded flex items-center gap-1 text-slate-400 transition-colors">
+            <Download className="w-3 h-3" /> EXPORT DATA
+          </button>
+        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-[11px]">
+            <thead>
+              <tr className="border-b border-slate-700/60 text-slate-500 font-bold uppercase tracking-wider">
+                <th className="pb-2 pl-2">Timestamp</th>
+                <th className="pb-2">Node Label</th>
+                <th className="pb-2">Coordinates Location (Click to Target)</th>
+                <th className="pb-2 text-right pr-2">Data Integrity</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-800/40 font-bold text-slate-300">
+              {logs.map((log, index) => (
+                <tr key={index} className="hover:bg-slate-800/20 transition-colors">
+                  <td className="py-2.5 pl-2 text-slate-500">{log.time}</td>
+                  <td className="text-cyan-400">{log.label}</td>
+                  <td className="text-slate-400 font-mono flex items-center gap-1">
+                    <span className="text-cyan-500 text-[12px]">🌐</span> {log.coord}
+                  </td>
+                  <td className="py-2.5 text-right pr-2 text-emerald-400">{log.integrity}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </footer>
 
     </div>
