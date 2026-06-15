@@ -20,6 +20,7 @@ export default function App() {
   const [emailResmi, setEmailResmi] = useState('');
   const [kategori, setKategori] = useState('Tech Startup');
   
+  // Perbaikan URL Google Maps: Menggunakan format standar (?q=loc&t=k) yang dijamin stabil, gratis, dan anti-blank
   const [logs, setLogs] = useState<NodeLog[]>([
     { 
       id: '1', 
@@ -31,7 +32,7 @@ export default function App() {
       confidence: 99.12, 
       risk: 'LOW', 
       potential: 98.4,
-      embedUrl: "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3944.123!2d115.2460!3d-8.6740!2m3!1f0!2f39!3f0!3m2!1i1024!2i768!4f35!2m1!1st!3m2!1sk&t=k&z=16"
+      embedUrl: "https://maps.google.com/maps?q=-8.6740,115.2460&t=k&z=15&output=embed"
     },
     { 
       id: '2', 
@@ -43,7 +44,7 @@ export default function App() {
       confidence: 97.50, 
       risk: 'MEDIUM', 
       potential: 88.7,
-      embedUrl: "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3983.887!2d101.6869!3d3.1390!2m3!1f0!2f45!3f0!3m2!1i1024!2i768!4f35!2m1!1st!3m2!1sk&t=k&z=15"
+      embedUrl: "https://maps.google.com/maps?q=3.1390,101.6869&t=k&z=14&output=embed"
     },
     { 
       id: '3', 
@@ -55,7 +56,7 @@ export default function App() {
       confidence: 89.10, 
       risk: 'HIGH', 
       potential: 94.5,
-      embedUrl: "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3970.213!2d143.9555!3d-6.3149!2m3!1f0!2f45!3f0!3m2!1i1024!2i768!4f35!2m1!1st!3m2!1sk&t=k&z=14"
+      embedUrl: "https://maps.google.com/maps?q=-6.3149,143.9555&t=k&z=13&output=embed"
     }
   ]);
 
@@ -84,7 +85,7 @@ export default function App() {
       confidence: parseFloat((92 + Math.random() * 7).toFixed(2)),
       risk: Math.random() > 0.6 ? 'MEDIUM' : 'LOW',
       potential: parseFloat((88 + Math.random() * 11).toFixed(2)),
-      embedUrl: `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3940.0!2d${randomLng}!3d${randomLat}!2m3!1f0!2f45!3f0!3m2!1i1024!2i768!4f35!2m1!1st!3m2!1sk&t=k&z=14`
+      embedUrl: `https://maps.google.com/maps?q=${randomLat},${randomLng}&t=k&z=14&output=embed`
     };
 
     const updatedLogs = [newLog, ...logs];
@@ -96,11 +97,10 @@ export default function App() {
   };
 
   return (
-    // THE OBSIDIAN VOID DEEP BACKGROUND WITH PREMIUM RADIAL GLOW
     <div className="min-w-screen min-h-screen bg-[#030303] text-zinc-400 font-mono p-4 flex flex-col justify-between relative overflow-hidden select-none text-[11px] antialiased tracking-tight">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,#1c1917_0%,#030303_85%)] pointer-events-none z-0"></div>
       
-      {/* ================= TOPBAR HEADER (CHROMIUM PLATINUM SUB-PIXEL BORDER) ================= */}
+      {/* ================= TOPBAR HEADER ================= */}
       <header className="backdrop-blur-xl bg-zinc-950/20 border-[0.5px] border-zinc-100/10 rounded-xl p-4 flex justify-between items-center mb-3 shadow-[0_12px_40px_rgba(0,0,0,0.9)] z-20 relative">
         <div className="flex items-center gap-4">
           <div className="p-2 bg-indigo-500/5 rounded border border-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.15)]">
@@ -108,20 +108,21 @@ export default function App() {
           </div>
           <div>
             <h1 className="font-bold tracking-tighter text-zinc-100 uppercase text-sm font-sans">QUANTUM AI GEOSPATIAL COMMAND CENTER</h1>
-            <p className="text-[9px] text-zinc-500 uppercase font-black tracking-[0.25em] mt-0.5">SESA INFRASTRUCTURE CORE NET // MATRIX TELEMETRY CONFIG v7.0</p>
+            {/* PERBAIKAN: Garis dua (//) di header sudah dihapus total */}
+            <p className="text-[9px] text-zinc-500 uppercase font-black tracking-[0.25em] mt-0.5">SESA INFRASTRUCTURE CORE NET</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-emerald-400 bg-emerald-950/20 border border-emerald-500/30 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-[0.1em] flex items-center gap-2 shadow-[0_0_12px_rgba(16,185,129,0.1)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981] animate-pulse"></span> GOOGLE_EARTH_LIVE_STREAMING
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse"></span> GOOGLE_EARTH_LIVE_STREAMING
           </span>
         </div>
       </header>
 
-      {/* ================= MAIN MONITORING INTERFACE PANELS ================= */}
+      {/* ================= MONITORING INTERFACE PANELS ================= */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-grow mb-3 z-20 relative">
         
-        {/* PANEL CONSOLE KIRI (ULTRA-TRANSPARENT GLASSMORPHISM) */}
+        {/* PANEL CONSOLE KIRI */}
         <div className="lg:col-span-3 backdrop-blur-xl bg-zinc-950/30 border-[0.5px] border-zinc-100/10 rounded-xl p-5 flex flex-col justify-between shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
           <div>
             <div className="flex justify-between text-[9px] font-bold text-zinc-600 border-b border-zinc-900/60 pb-3 mb-4 tracking-[0.15em]">
@@ -133,7 +134,6 @@ export default function App() {
               <PlusCircle className="w-3.5 h-3.5 text-indigo-400" /> CONSOLE NODE REGISTRATION
             </h2>
 
-            {/* FLOATING HUD PLATES INPUT CONTROL (BOTTOM BORDERS ONLY) */}
             <form onSubmit={handleDeployNode} className="space-y-6">
               <div>
                 <label className="block text-[9px] uppercase text-zinc-500 mb-1 font-bold tracking-[0.2em]">Nama Node Korporasi</label>
@@ -171,7 +171,6 @@ export default function App() {
                 </select>
               </div>
 
-              {/* HOLOGRAPHIC TRANSPARENT PLATE BUTTON WITH VIOLET GLOW */}
               <button 
                 type="submit"
                 className="w-full bg-gradient-to-r from-indigo-600/10 to-violet-600/10 border border-indigo-500/30 text-indigo-300 hover:text-zinc-100 font-black tracking-[0.25em] py-3.5 rounded-lg transition-all duration-500 uppercase text-[10px] hover:from-indigo-600/25 hover:to-violet-600/25 hover:shadow-[0_0_25px_rgba(99,102,241,0.25)] border-t-zinc-700/50"
@@ -182,10 +181,10 @@ export default function App() {
           </div>
         </div>
 
-        {/* ================= HIGH-FIDELITY INTERACTIVE PETA SATELIT CENTER CONTAINER ================= */}
+        {/* ================= HIGH-FIDELITY GOOGLE SATELLITE PETA CENTER CONTAINER ================= */}
         <div className="lg:col-span-6 bg-[#030303] border-[0.5px] border-zinc-100/10 rounded-xl overflow-hidden relative min-h-[420px] shadow-2xl flex items-center justify-center">
           
-          {/* Engine Iframe Satelit Google Terang & Responsif */}
+          {/* Iframe Feed Satelit Google yang sudah diperbaiki total */}
           <iframe 
             title="Google Earth Live Map Component"
             src={currentMapUrl}
@@ -194,7 +193,8 @@ export default function App() {
             loading="lazy"
           ></iframe>
           
-          {/* HUD GLASS CONTROL BOX OVERLAY */}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#030303]/30 via-transparent to-[#030303]/10 pointer-events-none z-10"></div>
+
           <div className="absolute top-4 left-4 backdrop-blur-md bg-zinc-950/80 border border-zinc-100/10 text-zinc-300 px-3 py-1.5 rounded font-black text-[9px] pointer-events-none shadow-xl flex items-center gap-2 tracking-[0.2em] z-10">
             <Zap className="w-3 h-3 text-indigo-400 animate-pulse" /> SPECTRAL_GOOGLE_EARTH_FEED: LIVE
           </div>
@@ -203,7 +203,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* PANEL METRIKS VALIDASI KANAN (ULTRA-TRANSPARENT GLASSMORPHISM) */}
+        {/* PANEL METRIKS VALIDASI KANAN */}
         <div className="lg:col-span-3 flex flex-col gap-3">
           
           {/* BINANCE HUD ROW LINK */}
@@ -257,16 +257,18 @@ export default function App() {
               </AnimatePresence>
             </div>
 
+            {/* PERBAIKAN: Garis dua (//) di panel kanan bawah ini sudah dibersihkan total */}
             <div className="bg-zinc-950/50 border border-zinc-900 rounded p-2.5 font-mono text-[9px] mt-4 flex items-center justify-between tracking-wide">
-              <span className="text-zinc-600 font-bold uppercase">// SECURITY_VECTOR</span>
-              <span className="text-emerald-400/90 font-black uppercase tracking-widest flex items-center gap-1">🟢 SECURE LOCK</span>
+              <span className="text-[#10b981] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse"></span> SECURE LOCK
+              </span>
             </div>
           </div>
         </div>
 
       </div>
 
-      {/* ================= COMPONENT 3: EVENT LIVE LOG VIEWER TABLE (ULTRA-TRANSPARENT GLASS) ================= */}
+      {/* ================= COMPONENT 3: EVENT LIVE LOG VIEWER TABLE ================= */}
       <footer className="backdrop-blur-xl bg-zinc-950/30 border-[0.5px] border-zinc-100/10 rounded-xl p-4 shadow-2xl z-20 relative">
         <div className="flex justify-between items-center mb-3 border-b border-zinc-900 pb-3">
           <h3 className="text-[9px] font-black text-indigo-400 tracking-[0.2em] uppercase flex items-center gap-2">
@@ -288,7 +290,6 @@ export default function App() {
                 <th className="pb-2 text-right pr-2">Data Integrity Vector</th>
               </tr>
             </thead>
-            {/* CINEMATIC SCANLINE EFFECT: ODD/EVEN ALTERNATING ROW STRIPING */}
             <tbody className="divide-y divide-zinc-900/20 font-bold text-zinc-300">
               {logs.map((log) => (
                 <tr 
