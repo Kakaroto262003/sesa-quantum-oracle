@@ -31,7 +31,7 @@ export default function App() {
       confidence: 99.12, 
       risk: 'LOW', 
       potential: 98.4,
-      embedUrl: "https://maps.google.com/maps?q=-8.6740,115.2460&t=k&z=15&output=embed"
+      embedUrl: "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15774.745287042562!2d115.2459997!3d-8.6769664!2m3!1f0!2f45!3f0!3m2!1i1024!2i768!4f35!2m1!1st!3m2!1sk&t=k&z=14"
     },
     { 
       id: '2', 
@@ -43,7 +43,7 @@ export default function App() {
       confidence: 97.50, 
       risk: 'MEDIUM', 
       potential: 88.7,
-      embedUrl: "https://maps.google.com/maps?q=3.1390,101.6869&t=k&z=14&output=embed"
+      embedUrl: "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3983.8378516086884!2d101.6869!3d3.1390!2m3!1f0!2f45!3f0!3m2!1i1024!2i768!4f35!2m1!1st!3m2!1sk&t=k&z=14"
     },
     { 
       id: '3', 
@@ -55,7 +55,7 @@ export default function App() {
       confidence: 89.10, 
       risk: 'HIGH', 
       potential: 94.5,
-      embedUrl: "https://maps.google.com/maps?q=-6.3149,143.9555&t=k&z=13&output=embed"
+      embedUrl: "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15923.478!2d143.9555!3d-6.3149!2m3!1f0!2f45!3f0!3m2!1i1024!2i768!4f35!2m1!1st!3m2!1sk&t=k&z=14"
     }
   ]);
 
@@ -65,6 +65,50 @@ export default function App() {
   const handleFocusNode = (node: NodeLog) => {
     setSelectedNode(node);
     setCurrentMapUrl(node.embedUrl);
+  };
+
+  // ================= 🛠️ FITUR BARU: MESIN EKSPOR DATA NYATA KE LAPTOP =================
+  const handleExportData = () => {
+    if (logs.length === 0) return alert('🚨 EXPORT SYSTEM DENIED: NO ACTIVE NODE DATA AVAILABLE.');
+
+    // 1. Menyusun struktur string text rapi berstandar Dokumen Enkripsi Intelijen 2040
+    let fileContent = `==================================================\n`;
+    fileContent += ` QUANTUM AI GEOSPATIAL COMMAND CENTER DATABASE    \n`;
+    fileContent += ` EXPORT SECURE PROTOCOL LAYER // SESA CORE        \n`;
+    fileContent += ` TIMESTAMP GENERATED: ${new Date().toLocaleString()} \n`;
+    fileContent += `==================================================\n\n`;
+
+    logs.forEach((node, index) => {
+      fileContent += `[NODE DEPLOYMENT RECORD #${index + 1}]\n`;
+      fileContent += `--------------------------------------------------\n`;
+      fileContent += `ID SECURITY HUB   : #AF045-X8C0${node.id}\n`;
+      fileContent += `TIMESTAMP TRIGGER : ${node.time}\n`;
+      fileContent += `ENTERPRISE IDENTITY: ${node.label}\n`;
+      fileContent += `COORDINATES LOCATION : ${node.coord}\n`;
+      fileContent += `INFRASTRUCTURE CAT  : ${node.kategori}\n`;
+      fileContent += `AI CONFIDENCE RATE  : ${node.confidence}%\n`;
+      fileContent += `RISK SEGMENT POTENTIAL: ${node.risk}\n`;
+      fileContent += `DATA INTEGRITY VECTOR: ${node.integrity}\n`;
+      fileContent += `--------------------------------------------------\n\n`;
+    });
+
+    fileContent += `==================================================\n`;
+    fileContent += ` END OF TRANSMISSION // SECURE DATA LOCK GUARANTEED \n`;
+    fileContent += `==================================================`;
+
+    // 2. Jalur Bypass Blob: Mengonversi data string text menjadi file unduhan virtual biner
+    const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    
+    // 3. Menembakkan link unduhan hantu (ghost link) agar browser otomatis mengunduh file
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `SESA_SPATIAL_CLUSTER_LAYER_${new Date().toISOString().slice(0,10)}.txt`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    alert('🎯 METADATA SUCCESS: File laporan cluster (.txt) berhasil terunduh dengan rapi di laptopmu!');
   };
 
   const handleDeployNode = (e: React.FormEvent) => {
@@ -84,7 +128,7 @@ export default function App() {
       confidence: parseFloat((92 + Math.random() * 7).toFixed(2)),
       risk: Math.random() > 0.6 ? 'MEDIUM' : 'LOW',
       potential: parseFloat((88 + Math.random() * 11).toFixed(2)),
-      embedUrl: `https://maps.google.com/maps?q=${randomLat},${randomLng}&t=k&z=14&output=embed`
+      embedUrl: `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15000!2d${randomLng}!3d${randomLat}!2m3!1f0!2f45!3f0!3m2!1i1024!2i768!4f35!2m1!1st!3m2!1sk&t=k&z=14`
     };
 
     const updatedLogs = [newLog, ...logs];
@@ -96,7 +140,6 @@ export default function App() {
   };
 
   return (
-    // PERBAIKAN UTAMA: Mengubah kelas layout dasar menjadi h-screen dan overflow-y-auto agar seluruh web bisa di-scroll halus jika space kurang
     <div className="w-full h-screen bg-[#030303] text-zinc-400 font-mono p-4 flex flex-col justify-between relative overflow-y-auto select-none text-[11px] antialiased tracking-tight">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,#1c1917_0%,#030303_85%)] pointer-events-none z-0"></div>
       
@@ -203,7 +246,6 @@ export default function App() {
         {/* PANEL METRIKS VALIDASI KANAN */}
         <div className="lg:col-span-3 flex flex-col gap-3 overflow-y-auto">
           
-          {/* BINANCE HUD ROW LINK */}
           <div className="backdrop-blur-xl bg-zinc-950/30 border-[0.5px] border-zinc-100/10 rounded-xl p-4 shadow-2xl flex-shrink-0">
             <h3 className="text-[9px] font-black text-amber-500/80 mb-3 flex items-center gap-1.5 tracking-[0.2em] uppercase">
               <TrendingUp className="w-3.5 h-3.5" /> ● BINANCE HUB SECURITY LINK
@@ -214,7 +256,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* REAL-TIME NODE METRICS SUMMARY */}
           <div className="backdrop-blur-xl bg-zinc-950/30 border-[0.5px] border-zinc-100/10 rounded-xl p-4 flex-grow shadow-2xl flex flex-col justify-between min-h-[220px]">
             <div className="space-y-4">
               <div className="flex justify-between items-center border-b border-zinc-900 pb-3">
@@ -264,13 +305,17 @@ export default function App() {
 
       </div>
 
-      {/* ================= COMPONENT 3: EVENT LIVE LOG VIEWER TABLE ================= */}
+      {/* ================= FOOTER TABLE (SUNTIKAN ONCLICK REALS UNDUHAN FILE) ================= */}
       <footer className="backdrop-blur-xl bg-zinc-950/30 border-[0.5px] border-zinc-100/10 rounded-xl p-4 shadow-2xl z-20 relative flex-shrink-0">
         <div className="flex justify-between items-center mb-3 border-b border-zinc-900 pb-3">
           <h3 className="text-[9px] font-black text-indigo-400 tracking-[0.2em] uppercase flex items-center gap-2">
             <Terminal className="w-4 h-4" /> MATRIX EVENT LOGS (INTEGRATED DATA MATRIX REPOSITORY)
           </h3>
-          <button className="bg-zinc-900/60 hover:bg-zinc-800 text-[9px] font-bold border border-zinc-800 px-3 py-1.5 rounded flex items-center gap-1.5 text-zinc-400 hover:text-zinc-200 transition-all tracking-wider uppercase">
+          {/* PERBAIKAN UTAMA: Menghubungkan fungsi onClick ke mesin handleExportData */}
+          <button 
+            onClick={handleExportData}
+            className="bg-zinc-900/60 hover:bg-zinc-800 text-[9px] font-bold border border-zinc-800 px-3 py-1.5 rounded flex items-center gap-1.5 text-zinc-400 hover:text-zinc-100 hover:border-indigo-500/50 transition-all tracking-wider uppercase active:scale-95"
+          >
             <Download className="w-3 h-3 text-indigo-400" /> EXPORT SPATIAL LAYER
           </button>
         </div>
