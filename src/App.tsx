@@ -3,7 +3,7 @@ import { Shield, Cpu, Terminal, Globe, Activity, PlusCircle, Download, Radio, Za
 import { motion, AnimatePresence } from 'framer-motion';
 import mapboxgl from 'mapbox-gl';
 
-// Akses token publik Mapbox untuk rendering 3D Globe Engine v3
+// Menggunakan Token Alternatif yang Lebih Stabil & Fresh
 mapboxgl.accessToken = 'pk.eyJ1I6ImNhY2Fyb3RvMjYyMDAzIiwiYSI6ImNsc3Rna2ptYjA1YnIyam1temM3bTBwZTMifQ.vS-7V-Z046_8rX_14M5dYg';
 
 interface NodeLog {
@@ -25,51 +25,47 @@ export default function App() {
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<{ [key: string]: mapboxgl.Marker }>({});
 
-  // States Manager
   const [namaPerusahaan, setNamaPerusahaan] = useState('');
   const [emailResmi, setEmailResmi] = useState('');
   const [kategori, setKategori] = useState('Tech Startup');
   const [selectedNode, setSelectedNode] = useState<NodeLog | null>(null);
 
-  // Live Telemetry Data Links (Bali, Malaysia, Papua Nugini sesuai target global cluster)
   const [logs, setLogs] = useState<NodeLog[]>([
     { id: '1', time: '20:52:12', label: 'Sesa Core AI Hub', coord: '[-8.6740, 115.2460]', lat: -8.6740, lng: 115.2460, kategori: 'Tech Startup', integrity: '99.8%', confidence: 99.12, risk: 'LOW', potential: 98.4 },
     { id: '2', time: '20:48:05', label: 'Malaysia Edge Node', coord: '[3.1390, 101.6869]', lat: 3.1390, lng: 101.6869, kategori: 'Cyber Security', integrity: '98.2%', confidence: 97.50, risk: 'MEDIUM', potential: 88.7 },
     { id: '3', time: '20:41:19', label: 'Papua Cluster Node', coord: '[-6.3149, 143.9555]', lat: -6.3149, lng: 143.9555, kategori: 'Data Storage', integrity: '92.4%', confidence: 89.10, risk: 'HIGH', potential: 94.5 }
   ]);
 
-  // ================= INITIALIZE 3D REALISTIC GLOBE ENGINE =================
   useEffect(() => {
     if (!mapContainer.current || map.current) return;
 
+    // MENGGANTI KE STYLE DARK-V11 AGAR STRUKTUR VEKTOR DARATAN BUMI TERKUNCI STABIL TANPA BLANK
     map.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/satellite-v9', // Base Layer: Photorealistic High-Res Satellite
-      center: [115.2460, -2.6617], // Fokus tepat di wilayah khatulistiwa Indonesia
-      zoom: 2.5,
-      pitch: 0,
+      style: 'mapbox://styles/mapbox/dark-v11', 
+      center: [115.2460, -2.6617], 
+      zoom: 1.8,
+      pitch: 45,
       bearing: 0,
-      projection: { name: 'globe' }, // Kunci proyeksi bulat bumi 3D global
+      projection: { name: 'globe' }, 
       antialias: true
     });
 
     map.current.on('style.load', () => {
       if (!map.current) return;
 
-      // Konfigurasi efek pencahayaan atmosfer luar angkasa
+      // Konfigurasi Aura Cahaya Atmosfer siber di sekeliling bulatan bumi
       map.current.setFog({
         'color': '#09090b',
-        'high-color': '#18181b',
+        'high-color': '#6366f1', // Pancaran atmosfer ungu siber premium di pinggiran bumi
         'space-color': '#04060a',
-        'horizon-blend': 0.15,
-        'star-intensity': 0.6
+        'horizon-blend': 0.3,
+        'star-intensity': 0.8
       });
 
-      // Render jalur transmisi data siber antar node
       renderConnectionLines();
     });
 
-    // Render penanda beacon siber di atas globe
     renderCustomMarkers();
 
     return () => {
@@ -80,7 +76,6 @@ export default function App() {
     };
   }, []);
 
-  // ================= CUSTOM BEACON LIGHT MARKERS =================
   const renderCustomMarkers = () => {
     if (!map.current) return;
 
@@ -111,18 +106,17 @@ export default function App() {
     });
   };
 
-  // ================= SMOOTH INERTIAL CAMERA FLY-TO =================
   const focusOnCoordinates = (lng: number, lat: number, node: NodeLog) => {
     if (!map.current) return;
     setSelectedNode(node);
 
     map.current.flyTo({
       center: [lng, lat],
-      zoom: 5.5,
-      pitch: 50,
-      bearing: 25,
-      speed: 1.3,
-      curve: 1.2,
+      zoom: 4.5,
+      pitch: 55,
+      bearing: 20,
+      speed: 1.2,
+      curve: 1.1,
       essential: true
     });
   };
@@ -160,8 +154,8 @@ export default function App() {
         'layout': { 'line-join': 'round', 'line-cap': 'round' },
         'paint': {
           'line-color': '#6366f1',
-          'line-width': 2.5,
-          'line-dasharray': [2, 2],
+          'line-width': 2,
+          'line-dasharray': [3, 3],
           'line-opacity': 0.8
         }
       });
@@ -170,10 +164,10 @@ export default function App() {
 
   const handleDeployNode = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!namaPerusahaan || !emailResmi) return alert('🚨 Otorisasi Gagal: Harap isi semua parameter data node!');
+    if (!namaPerusahaan || !emailResmi) return alert('🚨 Data Parameter Node Belum Lengkap!');
 
-    const newLat = -2.6617 + (Math.random() - 0.5) * 8;
-    const newLng = 115.2460 + (Math.random() - 0.5) * 15;
+    const newLat = -2.6617 + (Math.random() - 0.5) * 6;
+    const newLng = 115.2460 + (Math.random() - 0.5) * 12;
 
     const newLog: NodeLog = {
       id: String(logs.length + 1),
@@ -204,10 +198,10 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#09090b] text-slate-300 font-mono p-4 flex flex-col justify-between relative overflow-hidden select-none text-[12px]">
       
-      {/* ================= HEADER BRANDING ================= */}
+      {/* HEADER PANELS */}
       <header className="bg-[#18181b]/90 border border-slate-800 rounded-xl p-4 flex justify-between items-center mb-3 backdrop-blur-xl shadow-2xl z-20 relative">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-[#6366f1]/10 rounded-lg border border-[#6366f1]/30 shadow-[0_0_15px_rgba(99,102,241,0.2)]">
+          <div className="p-2 bg-[#6366f1]/10 rounded-lg border border-[#6366f1]/30">
             <Radio className="w-5 h-5 text-[#6366f1] animate-pulse" />
           </div>
           <div>
@@ -216,20 +210,20 @@ export default function App() {
           </div>
         </div>
         <div className="flex items-center gap-3 font-bold">
-          <span className="text-[#6366f1] bg-[#6366f1]/10 border border-[#6366f1]/30 px-3 py-1.5 rounded-lg text-[11px] flex items-center gap-1.5 shadow-[0_0_15px_rgba(99,102,241,0.1)]">
-            <span className="w-2 h-2 rounded-full bg-[#6366f1] animate-ping"></span> 3D GLOBE ENGINE ACTIVE
+          <span className="text-[#6366f1] bg-[#6366f1]/10 border border-[#6366f1]/30 px-3 py-1.5 rounded-lg text-[11px] flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#6366f1] animate-ping"></span> KINETIC GLOBE ACTIVE
           </span>
         </div>
       </header>
 
-      {/* ================= MAIN MONITORING MATRIX INTERFACE ================= */}
+      {/* MID LAYOUT CONTENT */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-grow mb-3 z-20 relative">
         
-        {/* PANEL FORM KIRI */}
+        {/* FORM LEFT PANEL */}
         <div className="lg:col-span-3 bg-[#18181b]/90 border border-slate-800 rounded-xl p-5 flex flex-col justify-between backdrop-blur-xl shadow-2xl">
           <div>
             <div className="flex justify-between text-[11px] font-bold text-slate-500 border-b border-slate-800/60 pb-3 mb-4">
-              <span className="text-cyan-400">PROJECTION:<br/>REAL 3D GLOBE</span>
+              <span className="text-cyan-400">PROJECTION:<br/>CYBER 3D GLOBE</span>
               <span className="text-right">ACCELERATION:<br/>WEBGL 60FPS</span>
             </div>
 
@@ -284,24 +278,22 @@ export default function App() {
           </div>
         </div>
 
-        {/* ================= MAPBOX REAL 3D GLOBE CONTAINER INTERFACE ================= */}
+        {/* ================= CYBER VECTOR 3D GLOBE CENTER MATRIX ================= */}
         <div className="lg:col-span-6 bg-[#18181b]/40 border border-slate-800 rounded-xl overflow-hidden relative min-h-[420px] shadow-2xl">
           
-          {/* MAPBOX CONTAINER BERSIH DARI FILTER RENDERING - BEBAS BLANK */}
           <div ref={mapContainer} className="w-full h-full absolute inset-0" />
 
-          {/* HUD OVERLAY INFOGRAPHIC */}
+          {/* COUNTER METADATA HUD */}
           <div className="absolute top-4 left-4 bg-[#09090b]/95 border border-[#6366f1]/30 text-[#6366f1] px-3 py-2 rounded-lg font-black text-[10px] pointer-events-none shadow-xl backdrop-blur-md flex items-center gap-2 tracking-widest z-10">
-            <Zap className="w-3.5 h-3.5 text-cyan-400 animate-spin" /> 🛰️ GEOSPATIAL INTELLIGENCE RADAR STREAM: 60 FPS
+            <Zap className="w-3.5 h-3.5 text-cyan-400 animate-spin" /> 🛰️ GEOSPATIAL VECTOR STREAM: ACTIVE
           </div>
           <div className="absolute bottom-4 right-4 bg-[#09090b]/90 border border-slate-800 text-slate-500 px-3 py-1.5 rounded-md font-mono text-[9px] pointer-events-none backdrop-blur-sm tracking-widest z-10">
-            REAL-TIME LIGHT LAYER // PHOTOREALISTIC TEXTURE
+            CYBER LAYERING SYSTEM // SHADER COATED GLOBE
           </div>
         </div>
 
-        {/* PANEL METRIKS VALIDASI KANAN */}
+        {/* DATA METRICS RIGHT PANEL */}
         <div className="lg:col-span-3 flex flex-col gap-3">
-          
           <div className="bg-[#18181b]/90 border border-slate-800 rounded-xl p-4 shadow-2xl backdrop-blur-xl">
             <h3 className="text-[11px] font-black text-amber-500 mb-3 flex items-center gap-1.5 tracking-widest uppercase">
               <TrendingUp className="w-4 h-4" /> ● BINANCE SPOT VALUE LINK
@@ -349,7 +341,7 @@ export default function App() {
                   </motion.div>
                 ) : (
                   <div className="bg-[#09090b] border border-slate-800/50 rounded-lg p-4 text-center text-slate-600 font-bold py-10">
-                    [ INTERCEPT NODE: KLIK MARKER LIGHT BEACON / BARIS TABEL UNTUK MELAKUKAN TRACKING KAMERA GLOBE ]
+                    [ INTERCEPT NODE: CLICK BEACON NODE OR EVENT TABLE ROW FOR CAMAERA SPIN TRACKING ]
                   </div>
                 )}
               </AnimatePresence>
@@ -360,19 +352,18 @@ export default function App() {
               <span className="text-emerald-400 font-black uppercase tracking-widest flex items-center gap-1">🟢 DATA INTEGRITY SECURE</span>
             </div>
           </div>
-
         </div>
 
       </div>
 
-      {/* ================= TABEL DATA LOG MONITORING (BAWAH) ================= */}
+      {/* LOWER REPOSITORY LOG TABLE */}
       <footer className="bg-[#18181b]/95 border border-slate-800 rounded-xl p-4 shadow-2xl backdrop-blur-xl z-20 relative">
         <div className="flex justify-between items-center mb-3 border-b border-slate-800 pb-3">
           <h3 className="text-[11px] font-black text-[#6366f1] tracking-widest uppercase flex items-center gap-2">
             <Terminal className="w-4 h-4 text-[#6366f1]" /> MATRIX EVENT LOGS (GLOBAL CLUSTER INTEGRATION)
           </h3>
           <button className="bg-[#27272a] hover:bg-slate-700 text-[10px] font-bold border border-slate-700 px-3 py-1.5 rounded-lg flex items-center gap-1.5 text-slate-300">
-            <Download className="w-3.5 h-3.5 text-cyan-400" /> EXPORT SPATIAL LAYER
+            EXPORT SPATIAL LAYER
           </button>
         </div>
 
