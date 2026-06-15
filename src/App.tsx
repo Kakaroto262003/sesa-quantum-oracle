@@ -20,7 +20,6 @@ export default function App() {
   const [emailResmi, setEmailResmi] = useState('');
   const [kategori, setKategori] = useState('Tech Startup');
   
-  // Perbaikan URL Google Maps: Menggunakan format standar (?q=loc&t=k) yang dijamin stabil, gratis, dan anti-blank
   const [logs, setLogs] = useState<NodeLog[]>([
     { 
       id: '1', 
@@ -97,33 +96,33 @@ export default function App() {
   };
 
   return (
-    <div className="min-w-screen min-h-screen bg-[#030303] text-zinc-400 font-mono p-4 flex flex-col justify-between relative overflow-hidden select-none text-[11px] antialiased tracking-tight">
+    // PERBAIKAN UTAMA: Mengubah kelas layout dasar menjadi h-screen dan overflow-y-auto agar seluruh web bisa di-scroll halus jika space kurang
+    <div className="w-full h-screen bg-[#030303] text-zinc-400 font-mono p-4 flex flex-col justify-between relative overflow-y-auto select-none text-[11px] antialiased tracking-tight">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,#1c1917_0%,#030303_85%)] pointer-events-none z-0"></div>
       
       {/* ================= TOPBAR HEADER ================= */}
-      <header className="backdrop-blur-xl bg-zinc-950/20 border-[0.5px] border-zinc-100/10 rounded-xl p-4 flex justify-between items-center mb-3 shadow-[0_12px_40px_rgba(0,0,0,0.9)] z-20 relative">
+      <header className="backdrop-blur-xl bg-zinc-950/20 border-[0.5px] border-zinc-100/10 rounded-xl p-4 flex justify-between items-center mb-3 shadow-[0_12px_40px_rgba(0,0,0,0.9)] z-20 relative flex-shrink-0">
         <div className="flex items-center gap-4">
           <div className="p-2 bg-indigo-500/5 rounded border border-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.15)]">
             <Radio className="w-4 h-4 text-indigo-400 animate-pulse" />
           </div>
           <div>
             <h1 className="font-bold tracking-tighter text-zinc-100 uppercase text-sm font-sans">QUANTUM AI GEOSPATIAL COMMAND CENTER</h1>
-            {/* PERBAIKAN: Garis dua (//) di header sudah dihapus total */}
             <p className="text-[9px] text-zinc-500 uppercase font-black tracking-[0.25em] mt-0.5">SESA INFRASTRUCTURE CORE NET</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-emerald-400 bg-emerald-950/20 border border-emerald-500/30 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-[0.1em] flex items-center gap-2 shadow-[0_0_12px_rgba(16,185,129,0.1)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_#10b981] animate-pulse"></span> GOOGLE_EARTH_LIVE_STREAMING
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shadow-[0_0_8px_#10b981] animate-pulse"></span> GOOGLE_EARTH_LIVE_STREAMING
           </span>
         </div>
       </header>
 
       {/* ================= MONITORING INTERFACE PANELS ================= */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-grow mb-3 z-20 relative">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-grow mb-3 z-20 relative min-h-0">
         
         {/* PANEL CONSOLE KIRI */}
-        <div className="lg:col-span-3 backdrop-blur-xl bg-zinc-950/30 border-[0.5px] border-zinc-100/10 rounded-xl p-5 flex flex-col justify-between shadow-[0_10px_30px_rgba(0,0,0,0.5)]">
+        <div className="lg:col-span-3 backdrop-blur-xl bg-zinc-950/30 border-[0.5px] border-zinc-100/10 rounded-xl p-5 flex flex-col justify-between shadow-[0_10px_30px_rgba(0,0,0,0.5)] overflow-y-auto">
           <div>
             <div className="flex justify-between text-[9px] font-bold text-zinc-600 border-b border-zinc-900/60 pb-3 mb-4 tracking-[0.15em]">
               <span>PROJECTION: TRANS_MAPS</span>
@@ -181,10 +180,8 @@ export default function App() {
           </div>
         </div>
 
-        {/* ================= HIGH-FIDELITY GOOGLE SATELLITE PETA CENTER CONTAINER ================= */}
+        {/* ================= MAP SATELIT CENTER CONTAINER ================= */}
         <div className="lg:col-span-6 bg-[#030303] border-[0.5px] border-zinc-100/10 rounded-xl overflow-hidden relative min-h-[420px] shadow-2xl flex items-center justify-center">
-          
-          {/* Iframe Feed Satelit Google yang sudah diperbaiki total */}
           <iframe 
             title="Google Earth Live Map Component"
             src={currentMapUrl}
@@ -204,10 +201,10 @@ export default function App() {
         </div>
 
         {/* PANEL METRIKS VALIDASI KANAN */}
-        <div className="lg:col-span-3 flex flex-col gap-3">
+        <div className="lg:col-span-3 flex flex-col gap-3 overflow-y-auto">
           
           {/* BINANCE HUD ROW LINK */}
-          <div className="backdrop-blur-xl bg-zinc-950/30 border-[0.5px] border-zinc-100/10 rounded-xl p-4 shadow-2xl">
+          <div className="backdrop-blur-xl bg-zinc-950/30 border-[0.5px] border-zinc-100/10 rounded-xl p-4 shadow-2xl flex-shrink-0">
             <h3 className="text-[9px] font-black text-amber-500/80 mb-3 flex items-center gap-1.5 tracking-[0.2em] uppercase">
               <TrendingUp className="w-3.5 h-3.5" /> ● BINANCE HUB SECURITY LINK
             </h3>
@@ -218,7 +215,7 @@ export default function App() {
           </div>
 
           {/* REAL-TIME NODE METRICS SUMMARY */}
-          <div className="backdrop-blur-xl bg-zinc-950/30 border-[0.5px] border-zinc-100/10 rounded-xl p-4 flex-grow shadow-2xl flex flex-col justify-between">
+          <div className="backdrop-blur-xl bg-zinc-950/30 border-[0.5px] border-zinc-100/10 rounded-xl p-4 flex-grow shadow-2xl flex flex-col justify-between min-h-[220px]">
             <div className="space-y-4">
               <div className="flex justify-between items-center border-b border-zinc-900 pb-3">
                 <h3 className="text-[9px] font-black text-indigo-400 tracking-[0.2em] uppercase flex items-center gap-1.5">
@@ -257,7 +254,6 @@ export default function App() {
               </AnimatePresence>
             </div>
 
-            {/* PERBAIKAN: Garis dua (//) di panel kanan bawah ini sudah dibersihkan total */}
             <div className="bg-zinc-950/50 border border-zinc-900 rounded p-2.5 font-mono text-[9px] mt-4 flex items-center justify-between tracking-wide">
               <span className="text-[#10b981] font-black uppercase tracking-widest flex items-center gap-1.5 shadow-sm">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#10b981] animate-pulse"></span> SECURE LOCK
@@ -269,10 +265,10 @@ export default function App() {
       </div>
 
       {/* ================= COMPONENT 3: EVENT LIVE LOG VIEWER TABLE ================= */}
-      <footer className="backdrop-blur-xl bg-zinc-950/30 border-[0.5px] border-zinc-100/10 rounded-xl p-4 shadow-2xl z-20 relative">
+      <footer className="backdrop-blur-xl bg-zinc-950/30 border-[0.5px] border-zinc-100/10 rounded-xl p-4 shadow-2xl z-20 relative flex-shrink-0">
         <div className="flex justify-between items-center mb-3 border-b border-zinc-900 pb-3">
           <h3 className="text-[9px] font-black text-indigo-400 tracking-[0.2em] uppercase flex items-center gap-2">
-            <Terminal className="w-4 h-4 text-indigo-500" /> MATRIX EVENT LOGS (INTEGRATED DATA MATRIX REPOSITORY)
+            <Terminal className="w-4 h-4" /> MATRIX EVENT LOGS (INTEGRATED DATA MATRIX REPOSITORY)
           </h3>
           <button className="bg-zinc-900/60 hover:bg-zinc-800 text-[9px] font-bold border border-zinc-800 px-3 py-1.5 rounded flex items-center gap-1.5 text-zinc-400 hover:text-zinc-200 transition-all tracking-wider uppercase">
             <Download className="w-3 h-3 text-indigo-400" /> EXPORT SPATIAL LAYER
