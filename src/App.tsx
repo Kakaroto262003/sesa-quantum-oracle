@@ -20,6 +20,7 @@ export default function App() {
   const [emailResmi, setEmailResmi] = useState('');
   const [kategori, setKategori] = useState('Tech Startup');
   
+  // DATA TELEMETRI CLUSTER UTAMA DENGAN KOORDINAT GOOGLE MAPS SATELIT BALI-MALAYSIA-PAPUA
   const [logs, setLogs] = useState<NodeLog[]>([
     { 
       id: '1', 
@@ -31,7 +32,7 @@ export default function App() {
       confidence: 99.12, 
       risk: 'LOW', 
       potential: 98.4,
-      embedUrl: "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15774.745287042562!2d115.2459997!3d-8.6769664!2m3!1f0!2f45!3f0!3m2!1i1024!2i768!4f35!2m1!1st!3m2!1sk&t=k&z=14"
+      embedUrl: "https://maps.google.com/maps?q=-8.6740,115.2460&t=k&z=14&output=embed"
     },
     { 
       id: '2', 
@@ -43,7 +44,7 @@ export default function App() {
       confidence: 97.50, 
       risk: 'MEDIUM', 
       potential: 88.7,
-      embedUrl: "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3983.8378516086884!2d101.6869!3d3.1390!2m3!1f0!2f45!3f0!3m2!1i1024!2i768!4f35!2m1!1st!3m2!1sk&t=k&z=14"
+      embedUrl: "https://maps.google.com/maps?q=3.1390,101.6869&t=k&z=14&output=embed"
     },
     { 
       id: '3', 
@@ -55,7 +56,7 @@ export default function App() {
       confidence: 89.10, 
       risk: 'HIGH', 
       potential: 94.5,
-      embedUrl: "https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15923.478!2d143.9555!3d-6.3149!2m3!1f0!2f45!3f0!3m2!1i1024!2i768!4f35!2m1!1st!3m2!1sk&t=k&z=14"
+      embedUrl: "https://maps.google.com/maps?q=-6.3149,143.9555&t=k&z=14&output=embed"
     }
   ]);
 
@@ -67,48 +68,29 @@ export default function App() {
     setCurrentMapUrl(node.embedUrl);
   };
 
-  // ================= 🛠️ FITUR BARU: MESIN EKSPOR DATA NYATA KE LAPTOP =================
+  // ================= 🛠️ LOGIKA BARU: EKSPOR FORMAT EXCEL .CSV (ANTI-NOTEPAD) =================
   const handleExportData = () => {
-    if (logs.length === 0) return alert('🚨 EXPORT SYSTEM DENIED: NO ACTIVE NODE DATA AVAILABLE.');
+    if (logs.length === 0) return alert('🚨 EXPORT DENIED: NO CORE DATA CHANNELS RECORDED.');
 
-    // 1. Menyusun struktur string text rapi berstandar Dokumen Enkripsi Intelijen 2040
-    let fileContent = `==================================================\n`;
-    fileContent += ` QUANTUM AI GEOSPATIAL COMMAND CENTER DATABASE    \n`;
-    fileContent += ` EXPORT SECURE PROTOCOL LAYER // SESA CORE        \n`;
-    fileContent += ` TIMESTAMP GENERATED: ${new Date().toLocaleString()} \n`;
-    fileContent += `==================================================\n\n`;
+    // Membuat header kolom Excel yang rapi (Menggunakan separator titik koma agar otomatis terpecah di Excel Indonesia/Global)
+    let csvContent = "ID SECURITY;TIMESTAMP;ENTERPRISE IDENTITY;COORDINATES MATRIC;INFRASTRUCTURE CATEGORY;AI CONFIDENCE SCORE;POTENTIAL INDEX;DATA INTEGRITY\n";
 
-    logs.forEach((node, index) => {
-      fileContent += `[NODE DEPLOYMENT RECORD #${index + 1}]\n`;
-      fileContent += `--------------------------------------------------\n`;
-      fileContent += `ID SECURITY HUB   : #AF045-X8C0${node.id}\n`;
-      fileContent += `TIMESTAMP TRIGGER : ${node.time}\n`;
-      fileContent += `ENTERPRISE IDENTITY: ${node.label}\n`;
-      fileContent += `COORDINATES LOCATION : ${node.coord}\n`;
-      fileContent += `INFRASTRUCTURE CAT  : ${node.kategori}\n`;
-      fileContent += `AI CONFIDENCE RATE  : ${node.confidence}%\n`;
-      fileContent += `RISK SEGMENT POTENTIAL: ${node.risk}\n`;
-      fileContent += `DATA INTEGRITY VECTOR: ${node.integrity}\n`;
-      fileContent += `--------------------------------------------------\n\n`;
+    // Memasukkan baris data logs ke dalam format kolom Excel
+    logs.forEach((node) => {
+      csvContent += `#AF045-X8C0${node.id};${node.time};${node.label};"${node.coord}";${node.kategori};${node.confidence}%;${node.potential};${node.integrity}\n`;
     });
 
-    fileContent += `==================================================\n`;
-    fileContent += ` END OF TRANSMISSION // SECURE DATA LOCK GUARANTEED \n`;
-    fileContent += `==================================================`;
-
-    // 2. Jalur Bypass Blob: Mengonversi data string text menjadi file unduhan virtual biner
-    const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8;' });
+    // Mengonversi data string menjadi Blob CSV dengan format UTF-8 agar dibaca Excel sebagai spreadsheet asli
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     
-    // 3. Menembakkan link unduhan hantu (ghost link) agar browser otomatis mengunduh file
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `SESA_SPATIAL_CLUSTER_LAYER_${new Date().toISOString().slice(0,10)}.txt`);
+    // Mengunci ekstensi file menjadi .csv agar langsung dikenali oleh Microsoft Excel
+    link.setAttribute('download', `SESA_SPATIAL_LOGS_${new Date().toISOString().slice(0,10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
-    alert('🎯 METADATA SUCCESS: File laporan cluster (.txt) berhasil terunduh dengan rapi di laptopmu!');
   };
 
   const handleDeployNode = (e: React.FormEvent) => {
@@ -117,6 +99,7 @@ export default function App() {
 
     const randomLat = (-2.6617 + (Math.random() - 0.5) * 4).toFixed(4);
     const randomLng = (115.2460 + (Math.random() - 0.5) * 8).toFixed(4);
+    const generatedEmbedUrl = `https://maps.google.com/maps?q=${randomLat},${randomLng}&t=k&z=14&output=embed`;
 
     const newLog: NodeLog = {
       id: String(logs.length + 1),
@@ -128,12 +111,12 @@ export default function App() {
       confidence: parseFloat((92 + Math.random() * 7).toFixed(2)),
       risk: Math.random() > 0.6 ? 'MEDIUM' : 'LOW',
       potential: parseFloat((88 + Math.random() * 11).toFixed(2)),
-      embedUrl: `https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15000!2d${randomLng}!3d${randomLat}!2m3!1f0!2f45!3f0!3m2!1i1024!2i768!4f35!2m1!1st!3m2!1sk&t=k&z=14`
+      embedUrl: generatedEmbedUrl
     };
 
     const updatedLogs = [newLog, ...logs];
     setLogs(updatedLogs);
-    setCurrentMapUrl(newLog.embedUrl);
+    setCurrentMapUrl(generatedEmbedUrl);
     setSelectedNode(newLog);
     setNamaPerusahaan('');
     setEmailResmi('');
@@ -223,7 +206,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* ================= MAP SATELIT CENTER CONTAINER ================= */}
+        {/* ================= HIGH-FIDELITY GOOGLE SATELLITE CONTAINER FIXED ================= */}
         <div className="lg:col-span-6 bg-[#030303] border-[0.5px] border-zinc-100/10 rounded-xl overflow-hidden relative min-h-[420px] shadow-2xl flex items-center justify-center">
           <iframe 
             title="Google Earth Live Map Component"
@@ -245,7 +228,6 @@ export default function App() {
 
         {/* PANEL METRIKS VALIDASI KANAN */}
         <div className="lg:col-span-3 flex flex-col gap-3 overflow-y-auto">
-          
           <div className="backdrop-blur-xl bg-zinc-950/30 border-[0.5px] border-zinc-100/10 rounded-xl p-4 shadow-2xl flex-shrink-0">
             <h3 className="text-[9px] font-black text-amber-500/80 mb-3 flex items-center gap-1.5 tracking-[0.2em] uppercase">
               <TrendingUp className="w-3.5 h-3.5" /> ● BINANCE HUB SECURITY LINK
@@ -305,13 +287,13 @@ export default function App() {
 
       </div>
 
-      {/* ================= FOOTER TABLE (SUNTIKAN ONCLICK REALS UNDUHAN FILE) ================= */}
+      {/* ================= COMPONENT 3: EVENT LIVE LOG VIEWER TABLE ================= */}
       <footer className="backdrop-blur-xl bg-zinc-950/30 border-[0.5px] border-zinc-100/10 rounded-xl p-4 shadow-2xl z-20 relative flex-shrink-0">
         <div className="flex justify-between items-center mb-3 border-b border-zinc-900 pb-3">
           <h3 className="text-[9px] font-black text-indigo-400 tracking-[0.2em] uppercase flex items-center gap-2">
-            <Terminal className="w-4 h-4" /> MATRIX EVENT LOGS (INTEGRATED DATA MATRIX REPOSITORY)
+            <Terminal className="w-4 h-4 text-indigo-500" /> MATRIX EVENT LOGS (INTEGRATED DATA MATRIX REPOSITORY)
           </h3>
-          {/* PERBAIKAN UTAMA: Menghubungkan fungsi onClick ke mesin handleExportData */}
+          {/* LOGIKA PUSH EKSPOR BARU TELAH TERHUBUNG */}
           <button 
             onClick={handleExportData}
             className="bg-zinc-900/60 hover:bg-zinc-800 text-[9px] font-bold border border-zinc-800 px-3 py-1.5 rounded flex items-center gap-1.5 text-zinc-400 hover:text-zinc-100 hover:border-indigo-500/50 transition-all tracking-wider uppercase active:scale-95"
