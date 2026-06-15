@@ -15,12 +15,11 @@ interface NodeLog {
   embedUrl: string;
 }
 
-// DATABASE INTERNAL SPATIAL GEODATA PRESISI TINGGI (100% ASLI & AKURAT)
 const SPATIAL_GEODATA_DICTIONARY: { [key: string]: { lat: number; lng: number; url: string } } = {
   "STIKOM": {
     lat: -8.6740,
     lng: 115.2460,
-    url: "https://maps.google.com/maps?q=-8.6740,115.2460&t=k&z=18&output=embed" // Kunci Asli Kampus Renon Bali (Zoom Maksimal)
+    url: "https://maps.google.com/maps?q=-8.6740,115.2460&t=k&z=18&output=embed"
   },
   "BALI": {
     lat: -8.6740,
@@ -47,7 +46,6 @@ export default function App() {
   const [solPrice, setSolPrice] = useState<string>("141.76");
   const [currentMapUrl, setCurrentMapUrl] = useState<string>("https://maps.google.com/maps?q=-8.6740,115.2460&t=k&z=18&output=embed");
   
-  // State Log Manajemen Lokal yang Super Cepat dan Stabil
   const [logs, setLogs] = useState<NodeLog[]>([
     { 
       id: '1', 
@@ -64,7 +62,6 @@ export default function App() {
   ]);
   const [selectedNode, setSelectedNode] = useState<NodeLog | null>(logs[0]);
 
-  // Stream Harga Crypto Live dari Bursa Binance Global
   useEffect(() => {
     const ws = new WebSocket("wss://stream.binance.com:9443/ws/solusdt@ticker");
     ws.onmessage = (event) => {
@@ -79,7 +76,6 @@ export default function App() {
     setCurrentMapUrl(node.embedUrl);
   };
 
-  // Fungsi Pembuat Unduhan File CSV yang Sempat Hilang
   const handleExportData = () => {
     if (logs.length === 0) return alert('🚨 EXPORT SYSTEM DENIED: NO DATA RECORDED.');
     let csvContent = "ID SECURITY;TIMESTAMP;ENTERPRISE IDENTITY;COORDINATES MATRIC;INFRASTRUCTURE CATEGORY;AI CONFIDENCE SCORE;POTENTIAL INDEX;DATA INTEGRITY\n";
@@ -101,7 +97,6 @@ export default function App() {
     if (!namaPerusahaan || !emailResmi) return alert('🚨 ALARM PARAMETER: HARAP ISI NAMA & EMAIL.');
 
     const upperName = namaPerusahaan.toUpperCase();
-    
     let targetLat = -8.6740; 
     let targetLng = 115.2460;
     let targetUrl = "https://maps.google.com/maps?q=-8.6740,115.2460&t=k&z=18&output=embed";
@@ -139,17 +134,16 @@ export default function App() {
     setLogs([newLog, ...logs]);
     setCurrentMapUrl(targetUrl);
     setSelectedNode(newLog);
-    
     setNamaPerusahaan('');
     setEmailResmi('');
   };
 
   return (
-    // MEMPERBAIKI SCROLL: Mengganti h-screen menjadi min-h-screen dan overflow-y-auto total pada basis kontainer utama
-    <div className="w-full min-h-screen bg-[#030303] text-zinc-100 p-4 flex flex-col justify-start relative overflow-y-auto antialiased tracking-tight pb-12 select-none">
+    /* FIXED FIXING SCROLL: Menggunakan min-h-screen dan overflow-y-auto total agar halaman bisa di-scroll bebas ke bawah */
+    <div className="w-full min-h-screen bg-[#030303] text-zinc-100 p-4 flex flex-col justify-start relative overflow-y-auto antialiased tracking-tight pb-16 select-none">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,#242427_0%,#030303_85%)] pointer-events-none z-0"></div>
       
-      {/* HEADER PANEL - FONT SANS FUTURISTIK */}
+      {/* HEADER PANEL - FONT SANS SERIF SPORTY / FUTURISTIK */}
       <header className="backdrop-blur-xl bg-zinc-950/80 border-[1.5px] border-zinc-800 rounded-xl p-4 flex justify-between items-center mb-4 shadow-2xl z-20 relative flex-shrink-0">
         <div className="flex items-center gap-4">
           <div className="p-2 bg-indigo-500/10 rounded-lg border-2 border-indigo-500/40">
@@ -168,9 +162,9 @@ export default function App() {
       </header>
 
       {/* DASHBOARD GRID PANELS */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 z-20 relative mb-4">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 z-20 relative mb-4 flex-shrink-0">
         
-        {/* FORM REGISTRASI KIRI - FONT SYSTEM SANS SERIF INTER (SANGAT MUDAH DIBACA) */}
+        {/* FORM REGISTRASI KIRI - FONT SANS INTER BERSIH */}
         <div className="lg:col-span-3 backdrop-blur-xl bg-zinc-950/80 border-[1.5px] border-zinc-800 rounded-xl p-5 flex flex-col justify-between shadow-2xl font-sans">
           <div>
             <div className="flex justify-between text-[9px] font-black text-zinc-400 border-b border-zinc-800 pb-3 mb-5 tracking-[0.15em] font-mono">
@@ -228,7 +222,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* MONITOR SATELIT GOOGLE EARTH CENTER */}
+        {/* MONITOR SATELIT MAP FEED CENTER */}
         <div className="lg:col-span-6 bg-[#030303] border-2 border-zinc-800 rounded-xl overflow-hidden relative min-h-[440px] shadow-2xl flex items-center justify-center">
           <iframe 
             title="Google Earth Component"
@@ -242,21 +236,18 @@ export default function App() {
           </div>
         </div>
 
-        {/* PANEL METRIKS UTAMA KANAN - RELEVANSI FONT GABUNGAN PREMIUM */}
+        {/* METRIKS KANAN */}
         <div className="lg:col-span-3 flex flex-col gap-3">
-          
-          {/* BINANCE HUD LIVE */}
           <div className="backdrop-blur-xl bg-zinc-950/80 border-[1.5px] border-zinc-800 rounded-xl p-4 shadow-xl">
-            <h3 className="text-[10px] font-bold text-amber-500 mb-3 flex items-center gap-1.5 font-mono tracking-widest uppercase">
+            <h3 className="text-[10px] font-bold text-amber-500 mb-3 flex items-center gap-1.5 tracking-widest font-mono uppercase">
               <TrendingUp className="w-3.5 h-3.5" /> ● BINANCE HUB SECURITY LINK
             </h3>
             <div className="flex justify-between items-center bg-zinc-900/40 border-2 border-zinc-800 p-3 rounded-lg">
               <span className="text-zinc-400 font-bold font-sans text-xs">SOL / USDT</span>
-              <span className="text-xl font-black text-amber-400 font-sans tracking-tight animate-pulse drop-shadow-[0_0_8px_rgba(245,158,11,0.2)]">${solPrice}</span>
+              <span className="text-xl font-black text-amber-400 font-sans tracking-tight animate-pulse">${solPrice}</span>
             </div>
           </div>
 
-          {/* NODE METRICS CARD */}
           <div className="backdrop-blur-xl bg-zinc-950/80 border-[1.5px] border-zinc-800 rounded-xl p-4 flex-grow shadow-xl flex flex-col justify-between min-h-[250px]">
             <div className="space-y-4">
               <div className="flex justify-between items-center border-b border-zinc-800 pb-3">
@@ -277,7 +268,7 @@ export default function App() {
                   >
                     <div className="bg-zinc-900/40 border-2 border-zinc-800 rounded-lg p-3 space-y-2.5 text-xs">
                       <div className="flex justify-between border-b border-zinc-800/40 pb-1.5"><span className="text-zinc-400 font-bold font-sans">BUSINESS_NAME:</span><span className="text-white font-black font-sans">{selectedNode.label}</span></div>
-                      <div className="flex justify-between border-b border-zinc-800/40 pb-1.5"><span className="text-zinc-400 font-bold font-sans">COORDINATES:</span><span className="text-[#06B6D4] font-bold font-mono tracking-wide drop-shadow-[0_0_5px_rgba(6,182,212,0.2)]">{selectedNode.coord}</span></div>
+                      <div className="flex justify-between border-b border-zinc-800/40 pb-1.5"><span className="text-zinc-400 font-bold font-sans">COORDINATES:</span><span className="text-[#06B6D4] font-bold font-mono tracking-wide">{selectedNode.coord}</span></div>
                       <div className="flex justify-between"><span className="text-zinc-400 font-bold font-sans">INFRA_TIER:</span><span className="text-zinc-300 font-bold font-sans uppercase">{selectedNode.kategori}</span></div>
                     </div>
 
@@ -306,14 +297,13 @@ export default function App() {
 
       </div>
 
-      {/* REPOSITORY EVENT LOG TABLE BAWAH - KEMBALINYA TOMBOL EXPORT TEPAT DI POSISI LINGKARAN MERAH */}
+      {/* REPOSITORY EVENT LOG TABLE BAWAH */}
       <footer className="backdrop-blur-xl bg-zinc-950/80 border-[1.5px] border-zinc-800 rounded-xl p-4 shadow-2xl z-20 relative flex-shrink-0">
         <div className="flex justify-between items-center mb-3 border-b border-zinc-800 pb-3">
           <h3 className="text-[10px] font-bold text-indigo-400 font-sans tracking-widest uppercase flex items-center gap-2">
             <Terminal className="w-4 h-4 text-indigo-500" /> MATRIX EVENT LOGS (INTEGRATED DATA MATRIX REPOSITORY)
           </h3>
           
-          {/* TOMBOL EXPORT PREMIUM SUDAH KEMBALI DI SINI (100% RELEVAN & DAPAT DIKLIK) */}
           <button 
             onClick={handleExportData}
             className="bg-zinc-900/90 hover:bg-zinc-800 text-[10px] font-bold font-sans border-2 border-zinc-700 hover:border-indigo-500/70 px-4 py-1.5 rounded-lg flex items-center gap-1.5 text-zinc-200 hover:text-white transition-all tracking-wider uppercase active:scale-95 shadow-md shadow-black"
@@ -322,8 +312,7 @@ export default function App() {
           </button>
         </div>
 
-        {/* LOG DATA TABLE - MENGGUNAKAN FONT MONOSPACE UNTUK VALUE ANGKA DAN SIBER */}
-        <div className="overflow-x-auto max-h-[160px] overflow-y-auto">
+        <div className="overflow-x-auto max-h-[180px] overflow-y-auto">
           <table className="w-full text-left border-collapse text-[11px] font-mono">
             <thead>
               <tr className="border-b border-zinc-800 text-zinc-400 font-bold uppercase tracking-widest sticky top-0 bg-zinc-950 z-10 pb-2">
