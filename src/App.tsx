@@ -15,11 +15,14 @@ interface NodeLog {
   embedUrl: string;
 }
 
-// 🌐 PANGKALAN DATA GEOSPATIAL ABSOLUT (AKURASI ATAP GEDUNG KAMPUS RENON)
+// 🌐 PANGKALAN DATA GEOSPATIAL ABSOLUT (MENGUNCI MATI ATAP GEDUNG KAMPUS RENON)
 const SPATIAL_GEODATA_DICTIONARY: { [key: string]: { lat: number; lng: number; url: string } } = {
   "STIKOM": { lat: -8.67385, lng: 115.24434, url: "https://maps.google.com/maps?q=loc:-8.67385,115.24434&t=k&z=19&output=embed" },
   "PUPUTAN": { lat: -8.67385, lng: 115.24434, url: "https://maps.google.com/maps?q=loc:-8.67385,115.24434&t=k&z=19&output=embed" },
   "80234": { lat: -8.67385, lng: 115.24434, url: "https://maps.google.com/maps?q=loc:-8.67385,115.24434&t=k&z=19&output=embed" },
+  "DANGIN PURI": { lat: -8.67385, lng: 115.24434, url: "https://maps.google.com/maps?q=loc:-8.67385,115.24434&t=k&z=19&output=embed" },
+  "DENPASAR": { lat: -8.67385, lng: 115.24434, url: "https://maps.google.com/maps?q=loc:-8.67385,115.24434&t=k&z=19&output=embed" },
+  "BALI": { lat: -8.67385, lng: 115.24434, url: "https://maps.google.com/maps?q=loc:-8.67385,115.24434&t=k&z=19&output=embed" },
   "SANUR": { lat: -8.6806, lng: 115.2631, url: "https://maps.google.com/maps?q=loc:-8.6806,115.2631&t=k&z=16&output=embed" },
   "KUTA": { lat: -8.7225, lng: 115.1668, url: "https://maps.google.com/maps?q=loc:-8.7225,115.1668&t=k&z=16&output=embed" },
   "MALAYSIA": { lat: 3.1390, lng: 101.6869, url: "https://maps.google.com/maps?q=loc:3.1390,101.6869&t=k&z=15&output=embed" },
@@ -36,7 +39,7 @@ export default function App() {
   const [currentMapUrl, setCurrentMapUrl] = useState<string>("https://maps.google.com/maps?q=loc:-8.67385,115.24434&t=k&z=19&output=embed");
   const [deploySuccessNotification, setDeploySuccessNotification] = useState<boolean>(false);
   
-  // Mengunci 3 data histori bawaan awal agar tabel bawah langsung terisi padat dan mewah
+  // Menjaga agar tabel bawah langsung terisi histori yang padat, mewah, dan akurat sejak awal load
   const [logs, setLogs] = useState<NodeLog[]>([
     { 
       id: '1', 
@@ -86,7 +89,7 @@ export default function App() {
     return () => ws.close();
   }, []);
 
-  // FITUR INTERAKTIF: Klik baris histori bawah langsung melacak lokasi siber di peta tengah
+  // 🕹️ TAMBAHAN FITUR KEMBALI: Klik baris atau link koordinat di tabel bawah langsung memicu reload peta ke lokasi target
   const handleFocusNode = (node: NodeLog) => {
     setSelectedNode(node);
     setCurrentMapUrl(node.embedUrl);
@@ -102,7 +105,7 @@ export default function App() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `QUANTUM_GEOSPATIAL_LOG_${new Date().toISOString().slice(0,10)}.csv`);
+    link.setAttribute('download', `SESA_OPERATIONAL_LOG.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -113,12 +116,14 @@ export default function App() {
     if (!namaPerusahaan || !emailResmi) return alert('🚨 PARAMETER EMPTY: HARAP ISI ALAMAT & EMAIL.');
 
     const upperName = namaPerusahaan.toUpperCase();
+    
+    // 🧠 SYSTEM ADD-ON: Mengunci mati titik koordinat pusat Gedung ITB STIKOM Bali Renon secara absolut
     let targetLat = -8.67385; 
     let targetLng = 115.24434;
     let targetUrl = "https://maps.google.com/maps?q=loc:-8.67385,115.24434&t=k&z=19&output=embed";
 
     let foundMatch = false;
-    const priorityKeys = ["STIKOM", "PUPUTAN", "80234", "SANUR", "KUTA", "MALAYSIA", "WAMENA", "DANGIN PURI"];
+    const priorityKeys = ["STIKOM", "PUPUTAN", "80234", "SANUR", "KUTA", "MALAYSIA", "WAMENA", "DANGIN PURI", "DENPASAR", "BALI"];
     
     for (const key of priorityKeys) {
       if (upperName.includes(key)) {
@@ -127,14 +132,6 @@ export default function App() {
         targetUrl = SPATIAL_GEODATA_DICTIONARY[key].url;
         foundMatch = true;
         break; 
-      }
-    }
-
-    if (!foundMatch) {
-      if (upperName.includes("DENPASAR") || upperName.includes("BALI")) {
-        targetLat = -8.67385;
-        targetLng = 115.24434;
-        targetUrl = "https://maps.google.com/maps?q=loc:-8.67385,115.24434&t=k&z=19&output=embed";
       }
     }
 
@@ -177,12 +174,12 @@ export default function App() {
             className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 bg-emerald-950/95 border-2 border-[#10B981] px-5 py-3 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.4)] flex items-center gap-3 font-mono text-xs text-emerald-300 tracking-wider"
           >
             <CheckCircle2 className="w-5 h-5 text-[#10B981] animate-bounce" /> 
-            <span>TARGET SPATIAL CORRIDOR LOCKED SUCCESSFULLY AT TRUE COORDINATES</span>
+            <span>TARGET SPATIAL CORRIDOR LOCKED SUCCESSFULLY AT TRUE COORDINATES // BUILDING LEVEL ZOOM ACTIVE</span>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* HEADER PANEL */}
+      {/* HEADER PANEL CONTROL */}
       <header className="backdrop-blur-xl bg-zinc-950/80 border-[1.5px] border-zinc-800 rounded-xl p-4 flex justify-between items-center mb-4 shadow-2xl z-20 relative">
         <div className="flex items-center gap-4">
           <div className="p-2 bg-indigo-500/10 rounded-lg border-2 border-indigo-500/40">
@@ -200,7 +197,7 @@ export default function App() {
         </div>
       </header>
 
-      {/* DASHBOARD LAYOUT GRID PANELS */}
+      {/* DASHBOARD MIDDLE CORE PANELS */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 z-20 relative mb-6 items-stretch">
         
         {/* PANEL FORM KIRI */}
@@ -261,7 +258,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* MONITOR SATELIT ASLI: GOOGLE EARTH FEED PRESETS 100% KEMBALI MEGAH */}
+        {/* MONITOR SATELIT ENGINE LIVE: PREMIUM SATELLITE GOOGLE EARTH FEED ACTIVE */}
         <div className="lg:col-span-6 bg-[#030303] border-2 border-zinc-800 rounded-xl overflow-hidden relative min-h-[500px] shadow-2xl flex items-center justify-center">
           <iframe 
             key={currentMapUrl}
@@ -276,7 +273,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* METRIKS HUB KANAN */}
+        {/* PANEL METRIKS HUD KANAN */}
         <div className="lg:col-span-3 flex flex-col gap-3 justify-between">
           <div className="backdrop-blur-xl bg-zinc-950/80 border-[1.5px] border-zinc-800 rounded-xl p-4 shadow-xl">
             <h3 className="text-[10px] font-bold text-amber-500 mb-3 flex items-center gap-1.5 tracking-widest font-mono uppercase">
@@ -337,7 +334,7 @@ export default function App() {
 
       </div>
 
-      {/* REPOSITORY EVENT LOG DATA TABLE BAWAH (100% KEMBALI UTUH & INTERAKTIF) */}
+      {/* MATRIX OPERASIONAL LIVE DATABASE VIEW (HISTORI UTUT & INTERAKTIF) */}
       <footer className="backdrop-blur-xl bg-zinc-950/80 border-[1.5px] border-zinc-800 rounded-xl p-4 shadow-2xl z-20 relative mt-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 border-b border-zinc-800 pb-4">
           <div className="space-y-1.5">
@@ -388,7 +385,7 @@ export default function App() {
                   <td className="py-3 text-zinc-400 pl-2 text-xs font-mono tracking-tight tabular-nums">{log.time}</td>
                   <td className="text-white font-semibold font-sans text-xs tracking-normal uppercase max-w-[280px] truncate">{log.label}</td>
                   
-                  {/* FITUR TRACKING KLIK ACTIVE: SINKRONISASI TOTAL ANTARA TABEL DAN PETA SATELIT UTAMA */}
+                  {/* TRACKING PROTOCOL ACTIVATED: Klik tautan koordinat di bawah langsung memaksa iFrame satelit di tengah berpindah lokasi */}
                   <td className="py-3 text-xs font-mono tracking-tight tabular-nums">
                     <button
                       onClick={(e) => {
