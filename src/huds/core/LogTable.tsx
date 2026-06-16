@@ -18,6 +18,7 @@ export default function LogTable() {
       `"${log.integrity}"`
     ].join(','));
 
+  
     const csvContent = [headers.join(','), ...csvRows].join('\n');
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -33,14 +34,13 @@ export default function LogTable() {
   return (
     <NeonCard className="w-full h-48 flex flex-col gap-2 pointer-events-auto z-20 backdrop-blur-xl bg-slate-900/40 border border-white/10">
       
-      {/* HEADER AREA - DENGAN UKURAN TOMBOL YANG LEBIH KECIL & MINIMALIS */}
+      {/* HEADER AREA */}
       <div className="flex justify-between items-center border-b border-white/5 pb-2">
         <h2 className="text-xs font-bold text-cyan-400 font-mono uppercase tracking-wider flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
           ENTERPRISE DATABASE LIVE LOG VIEWER (SaaS GLOBAL)
         </h2>
         
-        {/* TOMBOL DESAIN BARU: LEBIH KECIL, TANPA EMOJI, TEKS HANYA "EXPORT DATA" */}
         <button
           onClick={handleExportCSV}
           className="px-2 py-0.5 bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/30 hover:border-cyan-400 text-cyan-400 font-mono text-[9px] font-bold rounded transition-all duration-200 uppercase tracking-widest active:scale-[0.96]"

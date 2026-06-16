@@ -48,7 +48,7 @@ interface CoreState {
   setSelectedCoordinates: (coords: [number, number]) => void;
   loginUser: (email: string, username: string) => void;
   logoutUser: () => void;
-  addLogNode: (name: string, type: string) => void;
+  addLogNode: (name: string, type: string, customCoords?: [number, number], customLocation?: string) => void;
   triggerAiScan: (nodeName: string) => void;
   openCheckout: (name: string, type: string, email: string, tier: string) => void;
   closeCheckout: () => void;
@@ -102,17 +102,19 @@ export const useCoreData = create<CoreState>((set) => ({
     user: { username, email, tier: 'Enterprise' } 
   }),
   logoutUser: () => set({ user: null }),
-  addLogNode: (name, type) => set((state) => {
+  addLogNode: (name, type, customCoords, customLocation) => set((state) => {
     const now = new Date();
     const timestamp = now.toTimeString().split(' ')[0];
-    const randomLat = -8.6500 - (Math.random() * 0.05);
-    const randomLng = 115.2000 + (Math.random() * 0.05);
+    
+    // JIKA ADA KOORDINAT ASLI DARI GEOLOCATION, PAKAI ITU. JIKA TIDAK, BARU ACAK.
+    const finalCoords: [number, number] = customCoords ? customCoords : [-8.6500 - (Math.random() * 0.05), 115.2000 + (Math.random() * 0.05)];
+    const finalLocation = customLocation ? customLocation : `${type} Node Cluster`;
 
     const newEntry: LogEntry = {
       timestamp,
       nodeLabel: name,
-      location: `${type} Node Cluster`,
-      coordinates: [randomLat, randomLng],
+      location: finalLocation,
+      coordinates: finalCoords,
       integrity: `${(95 + Math.random() * 4).toFixed(1)}%`
     };
 
@@ -122,7 +124,7 @@ export const useCoreData = create<CoreState>((set) => ({
 
     return {
       logs: [newEntry, ...state.logs],
-      selectedCoordinates: [randomLat, randomLng],
+      selectedCoordinates: finalCoords, // Otomatis mindahin peta ke lokasi baru ini
       aiAnalysis: {
         status: 'ANALYZING',
         targetNode: name,
