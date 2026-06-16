@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Cpu, Terminal, PlusCircle, Download, Radio, Zap, Target, TrendingUp } from 'lucide-react';
+import { Shield, Cpu, Terminal, PlusCircle, Download, Radio, Zap, Target, TrendingUp, Filter, CheckCircle2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface NodeLog {
@@ -15,9 +15,13 @@ interface NodeLog {
   embedUrl: string;
 }
 
+// 🌐 PENGEMBANGAN KAMUS GEOSPATIAL REGIONAL ENTERPRISE (100% PRESISI)
 const SPATIAL_GEODATA_DICTIONARY: { [key: string]: { lat: number; lng: number; url: string } } = {
   "STIKOM": { lat: -8.6740, lng: 115.2460, url: "https://maps.google.com/maps?q=-8.6740,115.2460&t=k&z=18&output=embed" },
   "BALI": { lat: -8.6740, lng: 115.2460, url: "https://maps.google.com/maps?q=-8.6740,115.2460&t=k&z=18&output=embed" },
+  "RENON": { lat: -8.6740, lng: 115.2460, url: "https://maps.google.com/maps?q=-8.6740,115.2460&t=k&z=18&output=embed" },
+  "SANUR": { lat: -8.6806, lng: 115.2631, url: "https://maps.google.com/maps?q=-8.6806,115.2631&t=k&z=16&output=embed" },
+  "KUTA": { lat: -8.7225, lng: 115.1668, url: "https://maps.google.com/maps?q=-8.7225,115.1668&t=k&z=16&output=embed" },
   "MALAYSIA": { lat: 3.1390, lng: 101.6869, url: "https://maps.google.com/maps?q=3.1390,101.6869&t=k&z=15&output=embed" },
   "WAMENA": { lat: -4.0950, lng: 138.9460, url: "https://maps.google.com/maps?q=-4.0950,138.9460&t=k&z=14&output=embed" }
 };
@@ -26,9 +30,11 @@ export default function App() {
   const [namaPerusahaan, setNamaPerusahaan] = useState('');
   const [emailResmi, setEmailResmi] = useState('');
   const [kategori, setKategori] = useState('Cyber Security');
+  const [filterKategori, setFilterKategori] = useState('ALL');
   
   const [solPrice, setSolPrice] = useState<string>("141.76");
   const [currentMapUrl, setCurrentMapUrl] = useState<string>("https://maps.google.com/maps?q=-8.6740,115.2460&t=k&z=18&output=embed");
+  const [deploySuccessNotification, setDeploySuccessNotification] = useState<boolean>(false);
   
   const [logs, setLogs] = useState<NodeLog[]>([
     { 
@@ -70,7 +76,7 @@ export default function App() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `SESA_ORACLE_EXPORT_${new Date().toISOString().slice(0,10)}.csv`);
+    link.setAttribute('download', `SESA_ADVANCED_EXPORT_${new Date().toISOString().slice(0,10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -97,8 +103,8 @@ export default function App() {
     }
 
     if (!foundMatch) {
-      targetLat = -8.6740 + (Math.random() - 0.5) * 0.002;
-      targetLng = 115.2460 + (Math.random() - 0.5) * 0.002;
+      targetLat = -8.6740 + (Math.random() - 0.5) * 0.003;
+      targetLng = 115.2460 + (Math.random() - 0.5) * 0.003;
       targetUrl = `https://maps.google.com/maps?q=${targetLat.toFixed(4)},${targetLng.toFixed(4)}&t=k&z=18&output=embed`;
     }
 
@@ -120,13 +126,34 @@ export default function App() {
     setSelectedNode(newLog);
     setNamaPerusahaan('');
     setEmailResmi('');
+
+    // Trigger Notifikasi HUD Sukses Sementara (HCI Feedback)
+    setDeploySuccessNotification(true);
+    setTimeout(() => setDeploySuccessNotification(false), 3000);
   };
 
+  // Mengabaikan baris log jika tidak sesuai filter pilihan operator
+  const filteredLogs = logs.filter(log => filterKategori === 'ALL' || log.kategori === filterKategori);
+
   return (
-    /* PERBAIKAN RADIKAL: min-h-screen tanpa h-screen/overflow-hidden tunggal agar halaman bisa di-scroll secara alami */
-    <div className="w-full min-h-screen bg-[#030303] text-zinc-200 antialiased font-sans p-4 flex flex-col justify-start relative pb-24">
+    <div className="w-full min-h-screen bg-[#030303] text-zinc-200 antialiased font-sans p-4 flex flex-col justify-start relative pb-24 select-none">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_-20%,#242427_0%,#030303_85%)] pointer-events-none z-0"></div>
       
+      {/* HUD TOAST NOTIFICATION (FEEDBACK TELEMETRI INSTAN) */}
+      <AnimatePresence>
+        {deploySuccessNotification && (
+          <motion.div 
+            initial={{ opacity: 0, y: -50, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 bg-emerald-950/95 border-2 border-[#10B981] px-5 py-3 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.4)] flex items-center gap-3 font-mono text-xs text-emerald-300 tracking-wider"
+          >
+            <CheckCircle2 className="w-5 h-5 text-[#10B981] animate-bounce" /> 
+            <span>VOLUMETRIC NODE DEPLOYED SUCCESSFUL // SPECTRUM LAYER LOCKED</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* HEADER PANEL */}
       <header className="backdrop-blur-xl bg-zinc-950/80 border-[1.5px] border-zinc-800 rounded-xl p-4 flex justify-between items-center mb-4 shadow-2xl z-20 relative">
         <div className="flex items-center gap-4">
@@ -135,17 +162,17 @@ export default function App() {
           </div>
           <div>
             <h1 className="font-extrabold text-2xl tracking-tight text-white uppercase drop-shadow-sm font-sans">QUANTUM AI GEOSPATIAL COMMAND CENTER</h1>
-            <p className="text-[10px] text-indigo-400 uppercase font-bold font-mono tracking-[0.25em] mt-0.5">SESA CORE ARCHITECTURE // ENGINE FLOW: NATURAL UNBOUNDED SCROLL</p>
+            <p className="text-[10px] text-indigo-400 uppercase font-bold font-mono tracking-[0.25em] mt-0.5">SESA CORE ARCHITECTURE // INTERACTIVE DATABOUND MODEL ONLINE</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-[#10B981] bg-emerald-950/50 border-2 border-[#10B981]/50 px-3 py-1.5 rounded-lg text-[10px] font-bold font-mono tracking-[0.1em] flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#10B981] shadow-[0_0_10px_#10b981] animate-ping"></span> SCROLL_UNLOCKED
+            <span className="w-2 h-2 rounded-full bg-[#10B981] shadow-[0_0_10px_#10b981] animate-ping"></span> PIPELINE_ACTIVE
           </span>
         </div>
       </header>
 
-      {/* PANELS CONTAINERS - MENGGUNAKAN TINGGI REALISTIS YANG FLEKSIBEL */}
+      {/* DASHBOARD LAYOUT GRID PANELS */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 z-20 relative mb-6 items-stretch">
         
         {/* PANEL CONSOLE REGISTRASI KIRI */}
@@ -167,7 +194,7 @@ export default function App() {
                   type="text"
                   value={namaPerusahaan}
                   onChange={(e) => setNamaPerusahaan(e.target.value)}
-                  placeholder="Contoh: ITB STIKOM BALI" 
+                  placeholder="Contoh: ITB STIKOM BALI, SANUR, KUTA" 
                   className="w-full bg-zinc-950/50 border border-zinc-800 focus:border-indigo-500 text-sm text-zinc-100 placeholder:text-zinc-500 p-3 rounded-lg focus:outline-none transition-colors uppercase tracking-wide"
                 />
               </div>
@@ -206,7 +233,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* MONITOR SATELIT CENTER - KITA SET TINGGI TETAP 500PX AGAR NYAMAN DILIHAT DI ZOOM 100% */}
+        {/* MONITOR SATELIT LIVE MAP */}
         <div className="lg:col-span-6 bg-[#030303] border-2 border-zinc-800 rounded-xl overflow-hidden relative min-h-[500px] shadow-2xl flex items-center justify-center">
           <iframe 
             title="Google Earth Component"
@@ -281,17 +308,32 @@ export default function App() {
 
       </div>
 
-      {/* REPOSITORY EVENT LOG TABLE BAWAH - OTOMATIS MUNCUL DI BAWAH KARENA SCROLL SUDAH AKTIF JALUR NORMAL */}
+      {/* REPOSITORY EVENT LOG DATA TABLE */}
       <footer className="backdrop-blur-xl bg-zinc-950/80 border-[1.5px] border-zinc-800 rounded-xl p-4 shadow-2xl z-20 relative mt-4">
-        <div className="flex justify-between items-center mb-4 border-b border-zinc-800 pb-3">
-          <h3 className="text-[10px] font-bold text-indigo-400 font-sans tracking-widest uppercase flex items-center gap-2">
-            <Terminal className="w-4 h-4 text-indigo-500" /> MATRIX EVENT LOGS (INTEGRATED DATA MATRIX REPOSITORY)
-          </h3>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 border-b border-zinc-800 pb-4">
+          <div className="space-y-1.5">
+            <h3 className="text-[10px] font-bold text-indigo-400 font-sans tracking-widest uppercase flex items-center gap-2">
+              <Terminal className="w-4 h-4 text-indigo-500" /> MATRIX EVENT LOGS (INTEGRATED DATA MATRIX REPOSITORY)
+            </h3>
+            
+            {/* INTERACTIVE COMPONENT: TABS QUICK FILTER KATEGORI (REAL SAAS PROTOCOL) */}
+            <div className="flex items-center gap-1.5 bg-zinc-900/60 p-1 border border-zinc-800 rounded-lg text-[10px] font-mono font-bold">
+              <span className="text-zinc-500 px-2 flex items-center gap-1 uppercase"><Filter className="w-3 h-3" /> Filter:</span>
+              {['ALL', 'Cyber Security', 'Tech Startup', 'Data Storage'].map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setFilterKategori(cat)}
+                  className={`px-2.5 py-1 rounded transition-all uppercase ${filterKategori === cat ? 'bg-indigo-500 text-white shadow' : 'text-zinc-400 hover:text-white'}`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
           
-          {/* TOMBOL EXPORT KEMBALI DAN BERDIRI KOKOH DI SINI */}
           <button 
             onClick={handleExportData}
-            className="bg-zinc-900/90 hover:bg-zinc-800 text-[10px] font-bold font-sans border-2 border-zinc-700 hover:border-indigo-500/70 px-4 py-2 rounded-lg flex items-center gap-1.5 text-zinc-200 hover:text-white transition-all tracking-wider uppercase active:scale-95 shadow-md shadow-black"
+            className="bg-zinc-900/90 hover:bg-zinc-800 text-[10px] font-bold font-sans border-2 border-zinc-700 hover:border-indigo-500/70 px-4 py-2 rounded-lg flex items-center gap-1.5 text-zinc-200 hover:text-white transition-all tracking-wider uppercase active:scale-95 shadow-md shadow-black flex-shrink-0"
           >
             <Download className="w-3.5 h-3.5 text-indigo-400" /> EXPORT SPATIAL LAYER (.CSV)
           </button>
@@ -309,11 +351,11 @@ export default function App() {
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800/40 text-zinc-300">
-              {logs.map((log) => (
+              {filteredLogs.map((log) => (
                 <tr 
                   key={log.id} 
                   onClick={() => handleFocusNode(log)}
-                  className={`transition-all duration-150 cursor-pointer odd:bg-zinc-900/10 even:bg-transparent border-l-2 border-transparent hover:bg-zinc-900/60 hover:text-white hover:border-indigo-500 ${selectedNode?.id === log.id ? 'bg-indigo-950/20 border-l-4 border-indigo-500 text-white' : ''}`}
+                  className={`transition-all duration-150 cursor-pointer odd:bg-zinc-900/10 even:bg-transparent border-l-2 border-transparent hover:bg-zinc-900/60 hover:text-white hover:border-indigo-500 ${selectedNode?.id === log.id ? 'bg-indigo-950/20 border-l-4 border-indigo-400 text-white' : ''}`}
                 >
                   <td className="py-3 text-zinc-400 pl-2 text-xs font-mono tracking-tight tabular-nums">{log.time}</td>
                   <td className="text-white font-semibold font-sans text-xs tracking-normal uppercase">{log.label}</td>
@@ -328,6 +370,13 @@ export default function App() {
                   <td className="py-3 text-right pr-2 text-emerald-400 font-bold text-xs font-mono tracking-tight tabular-nums">{log.integrity}</td>
                 </tr>
               ))}
+              {filteredLogs.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="text-center py-8 text-zinc-500 font-mono text-xs uppercase tracking-wider">
+                    No nodes active inside this specific telemetry filter.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
