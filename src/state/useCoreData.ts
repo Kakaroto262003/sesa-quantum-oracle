@@ -48,6 +48,7 @@ interface CoreState {
   setSelectedCoordinates: (coords: [number, number]) => void;
   loginUser: (email: string, username: string) => void;
   logoutUser: () => void;
+  // PERBAIKAN: Mengubah customCoords dan customLocation menjadi opsional (?) agar aman dari error undefined
   addLogNode: (name: string, type: string, customCoords?: [number, number], customLocation?: string) => void;
   triggerAiScan: (nodeName: string) => void;
   openCheckout: (name: string, type: string, email: string, tier: string) => void;
@@ -62,7 +63,8 @@ export const useCoreData = create<CoreState>((set) => ({
     routingMatrix: 'X-7',
     solPrice: '141.76',
   },
-  selectedCoordinates: [-8.6705, 115.2126],
+  // KUNCI AWAL: Langsung mengunci koordinat satelit asli gedung ITB STIKOM Bali Renon sejak aplikasi dibuka
+  selectedCoordinates: [-8.67385, 115.24434],
   user: null,
   aiAnalysis: {
     status: 'IDLE',
@@ -80,6 +82,13 @@ export const useCoreData = create<CoreState>((set) => ({
     pendingTier: ''
   },
   logs: [
+    {
+      timestamp: '08:34:24',
+      nodeLabel: 'ITB STIKOM BALI RENON CORE',
+      location: 'Jl. Raya Puputan No.86, Denpasar',
+      coordinates: [-8.67385, 115.24434],
+      integrity: '99.72%',
+    },
     {
       timestamp: '12:04:15',
       nodeLabel: 'Sesa Quantum Lab',
@@ -102,20 +111,32 @@ export const useCoreData = create<CoreState>((set) => ({
     user: { username, email, tier: 'Enterprise' } 
   }),
   logoutUser: () => set({ user: null }),
+  
   addLogNode: (name, type, customCoords, customLocation) => set((state) => {
     const now = new Date();
     const timestamp = now.toTimeString().split(' ')[0];
-    
-    // JIKA ADA KOORDINAT ASLI DARI GEOLOCATION, PAKAI ITU. JIKA TIDAK, BARU ACAK.
-    const finalCoords: [number, number] = customCoords ? customCoords : [-8.6500 - (Math.random() * 0.05), 115.2000 + (Math.random() * 0.05)];
-    const finalLocation = customLocation ? customLocation : `${type} Node Cluster`;
+
+    // JALUR INTELIJEN: Cek apakah input mengandung kata kunci STIKOM / PUPUTAN / KAMPUS BALI
+    const upperInput = name.toUpperCase();
+    let finalCoords: [number, number];
+    let finalLocation: string;
+
+    if (upperInput.includes("STIKOM") || upperInput.includes("PUPUTAN") || upperInput.includes("86") || upperInput.includes("80234")) {
+      // Paksa kunci mati di atap gedung pusat Renon jika mendeteksi kata kunci alamat kampus
+      finalCoords = [-8.67385, 115.24434];
+      finalLocation = "ITB STIKOM Bali Kampus Renon, Denpasar";
+    } else {
+      // Jika input lain, gunakan data geolocation hasil fetch atau fallback acak yang terkontrol
+      finalCoords = customCoords ? customCoords : [-8.67385 - (Math.random() * 0.01), 115.24434 + (Math.random() * 0.01)];
+      finalLocation = customLocation ? customLocation : `${type} Node Cluster`;
+    }
 
     const newEntry: LogEntry = {
       timestamp,
       nodeLabel: name,
       location: finalLocation,
       coordinates: finalCoords,
-      integrity: `${(95 + Math.random() * 4).toFixed(1)}%`
+      integrity: `${(96 + Math.random() * 3).toFixed(1)}%`
     };
 
     setTimeout(() => {
@@ -124,23 +145,24 @@ export const useCoreData = create<CoreState>((set) => ({
 
     return {
       logs: [newEntry, ...state.logs],
-      selectedCoordinates: finalCoords, // Otomatis mindahin peta ke lokasi baru ini
+      selectedCoordinates: finalCoords, // Memaksa sinkronisasi state iFrame di SpaceEngine melompat secara instan
       aiAnalysis: {
         status: 'ANALYZING',
         targetNode: name,
         sentiment: 'NEUTRAL',
-        accuracy: 'CALIBRATING...',
-        actionTaken: 'COMPUTING SENTIMENT MATRIX',
+        accuracy: '100%',
+        actionTaken: 'COMPUTING GEOSPATIAL VECTOR',
         waveData: Array.from({length: 8}, () => Math.floor(Math.random() * 60) + 20)
       }
     };
   }),
+  
   triggerAiScan: (nodeName) => set((state) => ({
     aiAnalysis: {
       status: 'ACTIVE',
       targetNode: nodeName,
-      sentiment: Math.random() > 0.4 ? 'POSITIVE' : 'NEUTRAL',
-      accuracy: `${(98 + Math.random() * 1.9).toFixed(2)}%`,
+      sentiment: 'POSITIVE',
+      accuracy: '99.85%',
       actionTaken: 'OPTIMIZED ROUTING DISPATCHED',
       waveData: Array.from({length: 8}, () => Math.floor(Math.random() * 40) + 50)
     }
