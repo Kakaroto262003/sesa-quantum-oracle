@@ -15,16 +15,48 @@ interface NodeLog {
   embedUrl: string;
 }
 
-// DATABASE KOORDINAT ABSOLUT GEDUNG ASLI (DIJAMIN 100% PRESISI)
+// 🌐 PENGUNCIAN ABSOLUT PARAMETER EMBED (PAKSA PIN DI ATAS ATAP GEDUNG ITB STIKOM BALI)
 const SPATIAL_GEODATA_DICTIONARY: { [key: string]: { lat: number; lng: number; url: string } } = {
-  "STIKOM": { lat: -8.67385, lng: 115.24434, url: "https://maps.google.com/maps?q=-8.67385,115.24434&t=k&z=19&output=embed" },
-  "PUPUTAN": { lat: -8.67385, lng: 115.24434, url: "https://maps.google.com/maps?q=-8.67385,115.24434&t=k&z=19&output=embed" },
-  "80234": { lat: -8.67385, lng: 115.24434, url: "https://maps.google.com/maps?q=-8.67385,115.24434&t=k&z=19&output=embed" },
-  "BALI": { lat: -8.67385, lng: 115.24434, url: "https://maps.google.com/maps?q=-8.67385,115.24434&t=k&z=19&output=embed" },
-  "SANUR": { lat: -8.6806, lng: 115.2631, url: "https://maps.google.com/maps?q=-8.6806,115.2631&t=k&z=16&output=embed" },
-  "KUTA": { lat: -8.7225, lng: 115.1668, url: "https://maps.google.com/maps?q=-8.7225,115.1668&t=k&z=16&output=embed" },
-  "MALAYSIA": { lat: 3.1390, lng: 101.6869, url: "https://maps.google.com/maps?q=3.1390,101.6869&t=k&z=15&output=embed" },
-  "WAMENA": { lat: -4.0950, lng: 138.9460, url: "https://maps.google.com/maps?q=-4.0950,138.9460&t=k&z=14&output=embed" }
+  "STIKOM": { 
+    lat: -8.67385, 
+    lng: 115.24434, 
+    url: "https://maps.google.com/maps?q=loc:-8.67385,115.24434&t=k&z=19&output=embed" // Refactor: Menggunakan loc: untuk paksa pin mati di koordinat asli
+  },
+  "PUPUTAN": { 
+    lat: -8.67385, 
+    lng: 115.24434, 
+    url: "https://maps.google.com/maps?q=loc:-8.67385,115.24434&t=k&z=19&output=embed"
+  },
+  "80234": { 
+    lat: -8.67385, 
+    lng: 115.24434, 
+    url: "https://maps.google.com/maps?q=loc:-8.67385,115.24434&t=k&z=19&output=embed"
+  },
+  "BALI": { 
+    lat: -8.67385, 
+    lng: 115.24434, 
+    url: "https://maps.google.com/maps?q=loc:-8.67385,115.24434&t=k&z=19&output=embed"
+  },
+  "SANUR": { 
+    lat: -8.6806, 
+    lng: 115.2631, 
+    url: "https://maps.google.com/maps?q=loc:-8.6806,115.2631&t=k&z=16&output=embed" 
+  },
+  "KUTA": { 
+    lat: -8.7225, 
+    lng: 115.1668, 
+    url: "https://maps.google.com/maps?q=loc:-8.7225,115.1668&t=k&z=16&output=embed" 
+  },
+  "MALAYSIA": { 
+    lat: 3.1390, 
+    lng: 101.6869, 
+    url: "https://maps.google.com/maps?q=loc:3.1390,101.6869&t=k&z=15&output=embed" 
+  },
+  "WAMENA": { 
+    lat: -4.0950, 
+    lng: 138.9460, 
+    url: "https://maps.google.com/maps?q=loc:-4.0950,138.9460&t=k&z=14&output=embed" 
+  }
 };
 
 export default function App() {
@@ -34,22 +66,22 @@ export default function App() {
   const [filterKategori, setFilterKategori] = useState('ALL');
   
   const [solPrice, setSolPrice] = useState<string>("141.76");
-  const [currentMapUrl, setCurrentMapUrl] = useState<string>("https://maps.google.com/maps?q=-8.67385,115.24434&t=k&z=19&output=embed");
+  // Set inisial awal langsung menggunakan parameter loc: yang baru
+  const [currentMapUrl, setCurrentMapUrl] = useState<string>("https://maps.google.com/maps?q=loc:-8.67385,115.24434&t=k&z=19&output=embed");
   const [deploySuccessNotification, setDeploySuccessNotification] = useState<boolean>(false);
   
-  // Mengunci data inisial awal langsung tepat di atap gedung ITB STIKOM Bali Renon
   const [logs, setLogs] = useState<NodeLog[]>([
     { 
       id: '1', 
-      time: '08:14:39', 
+      time: '08:34:24', 
       label: 'JL. RAYA PUPUTAN NO.86, DANGIN PURI KLOD, KEC. DENPASAR TIM., KOTA DENPASAR, BALI 80234', 
       coord: '[-8.67385, 115.24434]', 
       kategori: 'Cyber Security', 
       integrity: '100%', 
-      confidence: 99.85, 
+      confidence: 99.72, 
       risk: 'LOW', 
-      potential: 98.50, 
-      embedUrl: "https://maps.google.com/maps?q=-8.67385,115.24434&t=k&z=19&output=embed" 
+      potential: 96.70, 
+      embedUrl: "https://maps.google.com/maps?q=loc:-8.67385,115.24434&t=k&z=19&output=embed" 
     }
   ]);
   const [selectedNode, setSelectedNode] = useState<NodeLog | null>(logs[0]);
@@ -63,7 +95,6 @@ export default function App() {
     return () => ws.close();
   }, []);
 
-  // FITUR UTAMAMU: Klik baris atau koordinat langsung mengarahkan peta ke lokasi tujuan secara instan
   const handleFocusNode = (node: NodeLog) => {
     setSelectedNode(node);
     setCurrentMapUrl(node.embedUrl);
@@ -79,7 +110,7 @@ export default function App() {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', `SESA_TRACKING_EXPORT_${new Date().toISOString().slice(0,10)}.csv`);
+    link.setAttribute('download', `SESA_PRECISE_EXPORT_${new Date().toISOString().slice(0,10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -90,11 +121,9 @@ export default function App() {
     if (!namaPerusahaan || !emailResmi) return alert('🚨 ALARM PARAMETER: HARAP ISI NAMA & EMAIL.');
 
     const upperName = namaPerusahaan.toUpperCase();
-    
-    // PENETAPAN ABSOLUT KORIDOR TITIK GEDUNG STIKOM RENON BALI
     let targetLat = -8.67385; 
     let targetLng = 115.24434;
-    let targetUrl = "https://maps.google.com/maps?q=-8.67385,115.24434&t=k&z=19&output=embed";
+    let targetUrl = "https://maps.google.com/maps?q=loc:-8.67385,115.24434&t=k&z=19&output=embed";
 
     let foundMatch = false;
     const priorityKeys = ["STIKOM", "PUPUTAN", "80234", "SANUR", "KUTA", "MALAYSIA", "WAMENA"];
@@ -113,14 +142,14 @@ export default function App() {
       if (upperName.includes("DENPASAR") || upperName.includes("BALI")) {
         targetLat = -8.67385;
         targetLng = 115.24434;
-        targetUrl = "https://maps.google.com/maps?q=-8.67385,115.24434&t=k&z=19&output=embed";
+        targetUrl = "https://maps.google.com/maps?q=loc:-8.67385,115.24434&t=k&z=19&output=embed";
       }
     }
 
     const newLog: NodeLog = {
       id: String(logs.length + 1),
       time: new Date().toLocaleTimeString(),
-      label: namaPerusahaan, // Tetap mempertahankan casing teks asli agar rapi di tabel log
+      label: namaPerusahaan, 
       coord: `[${targetLat.toFixed(5)}, ${targetLng.toFixed(5)}]`,
       kategori: kategori,
       integrity: '100%',
@@ -156,7 +185,7 @@ export default function App() {
             className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50 bg-emerald-950/95 border-2 border-[#10B981] px-5 py-3 rounded-xl shadow-[0_0_30px_rgba(16,185,129,0.4)] flex items-center gap-3 font-mono text-xs text-emerald-300 tracking-wider"
           >
             <CheckCircle2 className="w-5 h-5 text-[#10B981] animate-bounce" /> 
-            <span>TARGET SPATIAL CORRIDOR LOCKED SUCCESSFULLY AT TRUE COORDINATES</span>
+            <span>TARGET SPATIAL CORRIDOR FIXED AT ACCURATE COORDINATES</span>
           </motion.div>
         )}
       </AnimatePresence>
@@ -169,12 +198,12 @@ export default function App() {
           </div>
           <div>
             <h1 className="font-extrabold text-2xl tracking-tight text-white uppercase drop-shadow-sm font-sans">QUANTUM AI GEOSPATIAL COMMAND CENTER</h1>
-            <p className="text-[10px] text-indigo-400 uppercase font-bold font-mono tracking-[0.25em] mt-0.5">SESA CORE ARCHITECTURE // TRACKING LINK MATRIX INTERFACE</p>
+            <p className="text-[10px] text-indigo-400 uppercase font-bold font-mono tracking-[0.25em] mt-0.5">SESA CORE ARCHITECTURE // NATIVE BUILDING LOCATOR ENGINE</p>
           </div>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-[#10B981] bg-emerald-950/50 border-2 border-[#10B981]/50 px-3 py-1.5 rounded-lg text-[10px] font-bold font-mono tracking-[0.1em] flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[#10B981] shadow-[0_0_10px_#10b981] animate-ping"></span> TRACKING_LINK_OK
+            <span className="w-2 h-2 rounded-full bg-[#10B981] shadow-[0_0_10px_#10b981] animate-ping"></span> CALIBRATION_OK
           </span>
         </div>
       </header>
@@ -240,7 +269,7 @@ export default function App() {
           </div>
         </div>
 
-        {/* MONITOR FEED PETA SATELIT GOOGLE MAPS (BUILDING ZOOM LEVEL 19) */}
+        {/* MONITOR FEED PETA SATELIT GOOGLE MAPS */}
         <div className="lg:col-span-6 bg-[#030303] border-2 border-zinc-800 rounded-xl overflow-hidden relative min-h-[500px] shadow-2xl flex items-center justify-center">
           <iframe 
             title="Google Earth Component"
@@ -250,7 +279,7 @@ export default function App() {
             loading="lazy"
           ></iframe>
           <div className="absolute top-4 left-4 backdrop-blur-md bg-zinc-950/90 border-2 border-zinc-800 text-white px-3 py-2 rounded-lg font-bold font-mono text-[10px] tracking-[0.2em] z-10 flex items-center gap-2 shadow-2xl">
-            <Zap className="w-3.5 h-3.5 text-indigo-400 animate-pulse" /> SPECTRAL_GOOGLE_EARTH_FEED: HIGH ACCURACY
+            <Zap className="w-3.5 h-3.5 text-indigo-400 animate-pulse" /> SPECTRAL_GOOGLE_EARTH_FEED: FIXED ACCURACY
           </div>
         </div>
 
@@ -361,16 +390,15 @@ export default function App() {
                 <tr 
                   key={log.id} 
                   onClick={() => handleFocusNode(log)}
-                  className={`transition-all duration-150 cursor-pointer odd:bg-zinc-900/10 even:bg-transparent border-l-2 border-transparent hover:bg-zinc-900/60 hover:text-white hover:border-indigo-500 ${selectedNode?.id === log.id ? 'bg-indigo-950/20 border-l-4 border-indigo-500 text-white shadow-inner' : ''}`}
+                  className={`transition-all duration-150 cursor-pointer odd:bg-zinc-900/10 even:bg-transparent border-l-2 border-transparent hover:bg-zinc-900/60 hover:text-white hover:border-indigo-500 ${selectedNode?.id === log.id ? 'bg-indigo-950/20 border-l-4 border-indigo-400 text-white shadow-inner' : ''}`}
                 >
                   <td className="py-3 text-zinc-400 pl-2 text-xs font-mono tracking-tight tabular-nums">{log.time}</td>
                   <td className="text-white font-semibold font-sans text-xs tracking-normal uppercase max-w-[220px] truncate">{log.label}</td>
                   
-                  {/* REFACTOR IMPLEMENTASI FITUR BARU: LINK KLIK KOORDINAT UNTUK AUTO-CENTRALIZED TRACKING */}
                   <td className="py-3 text-xs font-mono tracking-tight tabular-nums">
                     <button
                       onClick={(e) => {
-                        e.stopPropagation(); // Mencegah bentrokan klik baris ganda
+                        e.stopPropagation(); 
                         handleFocusNode(log);
                       }}
                       className="text-[#06B6D4] hover:text-cyan-300 font-bold flex items-center gap-2 group transition-colors text-left focus:outline-none"
