@@ -48,7 +48,6 @@ interface CoreState {
   setSelectedCoordinates: (coords: [number, number]) => void;
   loginUser: (email: string, username: string) => void;
   logoutUser: () => void;
-  // PERBAIKAN: Mengubah customCoords dan customLocation menjadi opsional (?) agar aman dari error undefined
   addLogNode: (name: string, type: string, customCoords?: [number, number], customLocation?: string) => void;
   triggerAiScan: (nodeName: string) => void;
   openCheckout: (name: string, type: string, email: string, tier: string) => void;
@@ -63,7 +62,7 @@ export const useCoreData = create<CoreState>((set) => ({
     routingMatrix: 'X-7',
     solPrice: '141.76',
   },
-  // KUNCI AWAL: Langsung mengunci koordinat satelit asli gedung ITB STIKOM Bali Renon sejak aplikasi dibuka
+  // SETTINGAN AWAL LAYAR KUNCI MATI DI ATAP GEDUNG ITB STIKOM BALI RENON
   selectedCoordinates: [-8.67385, 115.24434],
   user: null,
   aiAnalysis: {
@@ -116,18 +115,28 @@ export const useCoreData = create<CoreState>((set) => ({
     const now = new Date();
     const timestamp = now.toTimeString().split(' ')[0];
 
-    // JALUR INTELIJEN: Cek apakah input mengandung kata kunci STIKOM / PUPUTAN / KAMPUS BALI
     const upperInput = name.toUpperCase();
     let finalCoords: [number, number];
     let finalLocation: string;
 
-    if (upperInput.includes("STIKOM") || upperInput.includes("PUPUTAN") || upperInput.includes("86") || upperInput.includes("80234")) {
-      // Paksa kunci mati di atap gedung pusat Renon jika mendeteksi kata kunci alamat kampus
+    // INTERSEPSI GEOSPATIAL ABSOLUT: Deteksi string alamat panjang Google Maps milikmu
+    if (
+      upperInput.includes("STIKOM") || 
+      upperInput.includes("PUPUTAN") || 
+      upperInput.includes("86") || 
+      upperInput.includes("80234") ||
+      upperInput.includes("DANGIN PURI")
+    ) {
+      // Jika mendeteksi unsur alamat kampus, PAKSA KUNCI koordinat atap gedung asli!
       finalCoords = [-8.67385, 115.24434];
       finalLocation = "ITB STIKOM Bali Kampus Renon, Denpasar";
+    } else if (customCoords) {
+      // Jika ada data koordinat kustom dari Nominatim API
+      finalCoords = customCoords;
+      finalLocation = customLocation ? customLocation : `${type} Node Cluster`;
     } else {
-      // Jika input lain, gunakan data geolocation hasil fetch atau fallback acak yang terkontrol
-      finalCoords = customCoords ? customCoords : [-8.67385 - (Math.random() * 0.01), 115.24434 + (Math.random() * 0.01)];
+      // Fallback area terdekat jika di luar jangkauan kata kunci
+      finalCoords = [-8.67385 + (Math.random() - 0.5) * 0.002, 115.24434 + (Math.random() - 0.5) * 0.002];
       finalLocation = customLocation ? customLocation : `${type} Node Cluster`;
     }
 
@@ -145,7 +154,7 @@ export const useCoreData = create<CoreState>((set) => ({
 
     return {
       logs: [newEntry, ...state.logs],
-      selectedCoordinates: finalCoords, // Memaksa sinkronisasi state iFrame di SpaceEngine melompat secara instan
+      selectedCoordinates: finalCoords, // <--- Memaksa iFrame SpaceEngine langsung terbang ke lokasi asli!
       aiAnalysis: {
         status: 'ANALYZING',
         targetNode: name,
