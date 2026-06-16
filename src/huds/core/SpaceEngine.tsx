@@ -1,30 +1,35 @@
-\import React from 'react';
+import React from 'react';
 import { useCoreData } from '../../state/useCoreData';
 
 export default function SpaceEngine() {
+  // Mendengarkan koordinat yang sedang aktif di global state Zustand
   const selectedCoordinates = useCoreData((state) => state.selectedCoordinates);
   
-  // Ambil data Lat dan Lng secara aman
+  // Taktis Falback Proteksi Data jika array mendadak kosong
   const lat = selectedCoordinates ? selectedCoordinates[0] : -8.67385;
   const lng = selectedCoordinates ? selectedCoordinates[1] : 115.24434;
 
-  // Kalibrasi ketat kotak pembatas (Bounding Box) OpenStreetMap sekitar target
-  const offset = 0.003; 
-  const bbox = `${lng - offset},${lat - offset/2},${lng + offset},${lat + offset/2}`;
-  const mapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(bbox)}&layer=mapnik&marker=${lat},${lng}`;
+  // 🕵️ LANGKAH 2 (SANITY CHECK): Memunculkan data koordinat live langsung di Inspect Element Browser kamu
+  console.log("📡 RADAR MATRIKS GEOSPATIAL - KOORDINAT AKTIF:", [lat, lng]);
+
+  // Formula kalkulasi batas kotak (Bounding Box) OpenStreetMap agar titik pin pas berada di tengah layar
+  const offset = 0.002; 
+  const bbox = `${lng - offset},${lat - offset / 2},${lng + offset},${lat + offset / 2}`;
+  const openStreetMapUrl = `https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(bbox)}&layer=mapnik&marker=${lat},${lng}`;
 
   return (
     <div className="w-full h-full relative bg-slate-950">
-      {/* Grid Filter Kosmis */}
+      {/* Grid Filter Kosmis Bawaan */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20 z-10 pointer-events-none" />
       
-      {/* 🔥 PENGUNCI ABSOLUT: Menggunakan properti 'key' unik berdasarkan lat-lng.
-        Ini memaksa DOM React melakukan re-render total dan memindahkan pin secara paksa!
+      {/* 
+        🔥 AMUNISI UTAMA: Properti 'key' yang berubah berdasarkan kombinasi lat-lng 
+        memaksa peta melakukan hard-reload dan menaruh pin secara paksa di atas atap kampus STIKOM!
       */}
       <iframe
         key={`${lat}-${lng}`}
         title="SaaS Global Core Maps"
-        src={mapUrl}
+        src={openStreetMapUrl}
         className="w-full h-full border-0 opacity-90 contrast-[1.05]"
         allowFullScreen
       />

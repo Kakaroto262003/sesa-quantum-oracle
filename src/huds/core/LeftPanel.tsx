@@ -6,28 +6,19 @@ export default function LeftPanel() {
   const { metrics, openCheckout, addLogNode } = useCoreData();
   const [businessName, setBusinessName] = useState('');
   const [businessEmail, setBusinessEmail] = useState('');
-  const [businessType, setBusinessType] = useState('Cafe / Eatery');
+  const [businessType, setBusinessType] = useState('Cyber Security');
   const [tier, setTier] = useState('Standard Tier (Free)');
+  const [isDeploying, setIsDeploying] = useState(false);
 
   const handleDeploy = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!businessName.trim()) return;
+    if (!businessName.trim() || !businessEmail.trim()) return;
 
-    // 💡 JALAN PINTAS 100% BERHASIL: Deteksi Kampus STIKOM Bali secara Presisi
-    let finalCoords: [number, number] = [-8.67403, 115.24424]; // Koordinat Tepat STIKOM Bali Renon
-    let finalLocation = "Jl. Raya Puputan No.11A, Dangin Puri Klod, Denpasar Timur";
+    setIsDeploying(true);
 
-    // Jika user menginput tempat selain stikom, baru sistem memberikan fallback acak ringan
-    const inputLower = businessName.toLowerCase();
-    if (!inputLower.includes('stikom') && !businessEmail.includes('stikom-bali.ac.id')) {
-      // Jika bukan stikom, gunakan koordinat default pusat Denpasar
-      finalCoords = [-8.6705, 115.2126];
-      finalLocation = businessName + " Cluster Location";
-    }
-
+    // KINERJA UTAMA: Serahkan kendali penuh ke useCoreData tanpa mengirim koordinat acak dari frontend!
     if (tier === 'Standard Tier (Free)') {
-      // Kirim koordinat pasti ke store pusat
-      addLogNode(businessName, businessType, finalCoords, finalLocation);
+      addLogNode(businessName, businessType);
       setBusinessName('');
       setBusinessEmail('');
     } else {
@@ -35,13 +26,15 @@ export default function LeftPanel() {
       setBusinessName('');
       setBusinessEmail('');
     }
+
+    setIsDeploying(false);
   };
 
   return (
     <div className="w-80 h-[calc(100vh-140px)] pointer-events-auto z-20">
       <NeonCard className="w-full h-full flex flex-col gap-4 p-3 bg-slate-900/40 border border-white/10 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-slate-800 scrollbar-track-transparent">
         
-        {/* SECTION 1: DYNAMICS FLOW (METRICS) */}
+        {/* DYNAMICS FLOW (METRICS) */}
         <div className="flex flex-col gap-1.5 shrink-0">
           <div className="flex justify-between items-center border-b border-white/5 pb-1">
             <h2 className="text-[10px] font-bold text-cyan-400 font-mono tracking-widest uppercase flex items-center gap-1.5">
@@ -74,7 +67,7 @@ export default function LeftPanel() {
           </div>
         </div>
 
-        {/* SECTION 2: REGISTER NEW BUSINESS NODE (FORM) */}
+        {/* REGISTER NEW BUSINESS NODE */}
         <div className="flex flex-col gap-2 shrink-0">
           <h2 className="text-[10px] font-bold text-cyan-400 font-mono tracking-widest uppercase border-b border-white/5 pb-1 flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
@@ -83,11 +76,11 @@ export default function LeftPanel() {
 
           <form onSubmit={handleDeploy} className="flex flex-col gap-2.5 font-mono text-[11px]">
             <div className="flex flex-col gap-1">
-              <label className="text-[8px] text-slate-400 uppercase tracking-wider">Nama Perusahaan / Alamat Node</label>
+              <label className="text-[8px] text-slate-400 uppercase tracking-wider">Nama Perusahaan / Paste Alamat Maps</label>
               <input
                 type="text"
                 required
-                placeholder="Contoh: ITB STIKOM Bali"
+                placeholder="Paste alamat lengkap STIKOM di sini"
                 value={businessName}
                 onChange={(e) => setBusinessName(e.target.value)}
                 className="w-full bg-black/40 border border-slate-800 rounded p-2 text-white placeholder-slate-700 focus:outline-none focus:border-cyan-500"
@@ -99,7 +92,7 @@ export default function LeftPanel() {
               <input
                 type="email"
                 required
-                placeholder="Contoh: info@stikom-bali.ac.id"
+                placeholder="info@stikom-bali.ac.id"
                 value={businessEmail}
                 onChange={(e) => setBusinessEmail(e.target.value)}
                 className="w-full bg-black/40 border border-slate-800 rounded p-2 text-white placeholder-slate-700 focus:outline-none focus:border-cyan-500"
@@ -113,9 +106,8 @@ export default function LeftPanel() {
                 onChange={(e) => setBusinessType(e.target.value)}
                 className="w-full bg-black/80 border border-slate-800 rounded p-2 text-slate-300 focus:outline-none focus:border-cyan-500 cursor-pointer"
               >
-                <option value="Cafe / Eatery">Cafe / Eatery</option>
+                <option value="Cyber Security">Cyber Security</option>
                 <option value="Quantum Lab">Quantum Lab</option>
-                <option value="Enterprise Branch">Enterprise Branch</option>
                 <option value="Crypto Hub">Crypto Hub</option>
               </select>
             </div>
@@ -135,14 +127,15 @@ export default function LeftPanel() {
 
             <button
               type="submit"
-              className="w-full mt-1 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-400 text-white font-bold py-2.5 px-4 rounded transition-all duration-300 active:scale-[0.97] uppercase tracking-widest text-center text-[10px]"
+              disabled={isDeploying}
+              className="w-full mt-1 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-500 hover:to-teal-400 text-white font-bold py-2.5 px-4 rounded transition-all duration-300 active:scale-[0.97] uppercase tracking-widest text-center text-[10px] disabled:opacity-50"
             >
-              DEPLOY VOLUMETRIC NODE
+              {isDeploying ? 'GRID LOCKING...' : 'DEPLOY NODE'}
             </button>
           </form>
         </div>
 
-        {/* SECTION 3: TELEMETRY WAVE */}
+        {/* TELEMETRY WAVE */}
         <div className="flex flex-col gap-1.5 shrink-0 border-t border-white/5 pt-2">
           <span className="text-[8px] font-bold text-slate-400 font-mono tracking-widest uppercase flex items-center gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-cyan-500" />
